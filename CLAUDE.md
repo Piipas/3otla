@@ -39,6 +39,18 @@ Moroccan public holidays: website + free public API. Trilingual (ar RTL, fr, en)
 - Invalid input throws `HolidayError` with a stable `code`; the API maps codes to HTTP errors.
 - Web: Tailwind logical properties only (`ms-`, `pe-`, `start-`), never `ml-`/`pr-`/`left-`.
 
+## Public API (`apps/web/src/api`)
+
+- Hono + `@hono/zod-openapi`, mounted at `app/api/[[...route]]/route.ts` (Node runtime).
+  `createApi(options)` takes the clock, base URL and limiter so tests can inject them.
+- Every error is `{ error: { code, message, details?, docs } }` with `Cache-Control: no-store`.
+  `HolidayError` codes from core map to 400.
+- Cache profiles in `cache.ts`: `static` for date-addressed answers, `today` for anything
+  depending on the current date, `ics` for feeds. ETags come from `hono/etag`.
+- Rate limiting (`ratelimit.ts`) runs at the origin and fails open. `X-RateLimit-*` headers
+  are only set on responses the CDN won't share (errors, 429).
+- The OpenAPI spec is generated from the route schemas; `/docs` renders it with Scalar.
+
 ## Commands
 
 ```bash
