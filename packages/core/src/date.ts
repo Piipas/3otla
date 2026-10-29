@@ -89,3 +89,22 @@ export function todayInCasablanca(now: Date = new Date()): IsoDate {
   );
   return isoFromParts(Number(parts.year), Number(parts.month), Number(parts.day));
 }
+
+const offsetFormat = new Intl.DateTimeFormat("en-US", {
+  timeZone: TIME_ZONE,
+  timeZoneName: "longOffset",
+});
+
+/** Morocco's UTC offset in minutes at a given instant (from the runtime's tzdata). */
+function casablancaOffsetMinutes(instant: Date): number {
+  const name = offsetFormat.formatToParts(instant).find((p) => p.type === "timeZoneName")?.value;
+  const m = /GMT([+-])(\d{2}):?(\d{2})?/.exec(name ?? "");
+  if (!m) return 0;
+  return (m[1] === "-" ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3] ?? 0));
+}
+
+/** The instant a date begins in Morocco (00:00 Africa/Casablanca), e.g. for countdowns. */
+export function startOfDayInCasablanca(date: IsoDate): Date {
+  const utcMidnight = toDayNumber(date) * MS_PER_DAY;
+  return new Date(utcMidnight - casablancaOffsetMinutes(new Date(utcMidnight)) * 60_000);
+}

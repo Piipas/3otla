@@ -1,10 +1,6 @@
 import type { ReactNode } from "react";
 
-// Placeholder shell; the localized site ([locale]/) replaces this in the web phase.
+// The real root layout (with <html lang dir>) is app/[locale]/layout.tsx.
 export default function RootLayout({ children }: { children: ReactNode }) {
-  return (
-    <html lang="fr">
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }

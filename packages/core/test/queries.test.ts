@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { dayOfWeek, nextHolidays, todayInCasablanca, workdays } from "../src/index";
+import {
+  dayOfWeek,
+  nextHolidays,
+  startOfDayInCasablanca,
+  todayInCasablanca,
+  workdays,
+} from "../src/index";
 
 describe("workdays", () => {
   it("counts a week with Green March (Friday Nov 6, 2026)", () => {
@@ -69,5 +75,13 @@ describe("dates", () => {
     // 23:30 UTC on Jul 1 is already Jul 2 there.
     expect(todayInCasablanca(new Date("2026-07-01T23:30:00Z"))).toBe("2026-07-02");
     expect(todayInCasablanca(new Date("2026-07-01T22:30:00Z"))).toBe("2026-07-01");
+  });
+
+  it("finds the instant a day starts in Morocco", () => {
+    expect(startOfDayInCasablanca("2026-07-02").toISOString()).toBe("2026-07-01T23:00:00.000Z");
+    for (const d of ["2026-01-01", "2026-03-20", "2026-10-31", "2027-05-16"]) {
+      expect(todayInCasablanca(startOfDayInCasablanca(d)), d).toBe(d);
+      expect(todayInCasablanca(new Date(startOfDayInCasablanca(d).getTime() - 1)), d).not.toBe(d);
+    }
   });
 });

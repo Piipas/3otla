@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "siteName": "3otla",
+    "title": "3otla — Public holidays in Morocco",
+    "description": "Every public holiday in Morocco, national and religious, with its status (fixed, estimated, confirmed) and official source. Calendar, countdown and a free API.",
+    "yearTitle": "Public holidays in Morocco in {year}",
+    "yearDescription": "{year} calendar of public holidays in Morocco: national and religious holidays, estimated and confirmed dates, with official sources.",
+    "holidayTitle": "{name} {year} in Morocco: date",
+    "holidayDescription": "{name} {year} in Morocco: {date}. Status: {status}. Official source and countdown.",
+    "sourcesTitle": "Sources and method"
+  },
+  "nav": {
+    "home": "Home",
+    "calendar": "Calendar",
+    "sources": "Sources",
+    "api": "API",
+    "skip": "Skip to content"
+  },
+  "home": {
+    "kicker": "Next public holiday",
+    "today": "It’s today",
+    "inProgress": "Ongoing until {date}",
+    "upcoming": "Upcoming holidays",
+    "seeCalendar": "See the {year} calendar",
+    "intro": "Morocco’s public holidays, each date with its status and official source."
+  },
+  "countdown": {
+    "label": "Countdown",
+    "days": "{count, plural, one {day} other {days}}",
+    "hours": "{count, plural, one {hour} other {hours}}",
+    "minutes": "{count, plural, one {minute} other {minutes}}",
+    "seconds": "{count, plural, one {second} other {seconds}}"
+  },
+  "status": {
+    "fixed": "Fixed date",
+    "estimated": "Estimated",
+    "confirmed": "Confirmed",
+    "fixedHelp": "Same date every year, set by official texts.",
+    "estimatedHelp": "Estimated with the Umm al-Qura calendar. In Morocco the date depends on moon sighting and can be one day later.",
+    "confirmedHelp": "Date officially announced by the Ministry of Habous and Islamic Affairs.",
+    "source": "View source"
+  },
+  "calendars": {
+    "national": "National holidays",
+    "religious": "Religious holidays",
+    "all": "All public holidays"
+  },
+  "holiday": {
+    "days": "{count, plural, one {# day} other {# days}}",
+    "until": "until {date}",
+    "hijri": "Hijri date",
+    "officialSource": "Official source",
+    "decisions": "Official texts",
+    "scope": {
+      "all": "All sectors",
+      "public-sector": "Public sector",
+      "private-sector": "Private sector"
+    },
+    "dateSource": "Where the date comes from",
+    "announcement": "Official announcement of {date}",
+    "otherYears": "Other years",
+    "passed": "This holiday has passed.",
+    "notObserved": "Not a holiday this year.",
+    "inDays": "{count, plural, =0 {today} one {in # day} other {in # days}}",
+    "estimateNote": "Estimated date: it will be confirmed after the official moon-sighting announcement."
+  },
+  "calendar": {
+    "title": "{year} calendar",
+    "prev": "Previous year",
+    "next": "Next year",
+    "legend": "Legend",
+    "weekend": "Weekend",
+    "today": "Today",
+    "list": "Public holidays in {year}",
+    "count": "{count, plural, one {# public holiday} other {# public holidays}}"
+  },
+  "subscribe": {
+    "button": "Subscribe",
+    "title": "Add to your calendar",
+    "google": "Google Calendar",
+    "apple": "Apple Calendar",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "hint": "Estimated dates update automatically once confirmed."
+  },
+  "sources": {
+    "title": "Sources and method",
+    "intro": "Every date on 3otla shows its status and links to an official source. We never use aggregators or news sites as sources.",
+    "nationalTitle": "National holidays",
+    "nationalBody": "National holidays follow the official list published on Morocco’s national portal (maroc.ma) and the corresponding decrees.",
+    "religiousTitle": "Religious holidays",
+    "religiousBody": "Religious holiday dates are first estimated with the Umm al-Qura calendar. Morocco sets these dates by local moon sighting, so the actual date can be one day later. Once the Ministry of Habous announces the date, it becomes “confirmed” with a link to the announcement.",
+    "statusTitle": "The three statuses",
+    "correctionsTitle": "Report a mistake",
+    "correctionsBody": "The data is public and versioned on GitHub. Every correction must cite an official source.",
+    "licenseTitle": "License",
+    "licenseBody": "Data under CC BY 4.0, code under MIT.",
+    "list": "Sources used"
+  },
+  "footer": {
+    "tagline": "Morocco’s public holidays, with their sources.",
+    "api": "Free API",
+    "data": "Data CC BY 4.0"
+  },
+  "ui": {
+    "theme": "Toggle theme",
+    "language": "Language"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "back": "Back to home"
+  }
+}

@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * 3otla theme. Palette drawn from Morocco: sand walls, Majorelle blue, terracotta,
+ * saffron and Atlas green. Status colours carry meaning everywhere:
+ *   fixed → ink (certain), estimated → saffron (may move a day), confirmed → green.
+ */
+:root {
+  --bg: #f4eee3;
+  --surface: #fffaf1;
+  --surface-2: #ece2d1;
+  --ink: #1e1b16;
+  --muted: #6c6253;
+  --line: #ddd0ba;
+
+  --brand: #2f3fce; /* Majorelle */
+  --brand-ink: #fffaf1;
+  --brand-deep: #1b2486;
+  --accent: #c4502f; /* terracotta */
+  --accent-ink: #fffaf1;
+
+  --fixed: #3b3a36;
+  --fixed-soft: #e4ddd0;
+  --estimated: #a86d0b;
+  --estimated-soft: #f7e3b8;
+  --confirmed: #11704f;
+  --confirmed-soft: #cdebdc;
+
+  --weekend: #e6dccb;
+  --ring: #2f3fce;
+}
+
+.dark {
+  --bg: #0c0f1e;
+  --surface: #141a2f;
+  --surface-2: #1c2340;
+  --ink: #f2ece1;
+  --muted: #a39b8d;
+  --line: #2a3254;
+
+  --brand: #8d98ff;
+  --brand-ink: #0c0f1e;
+  --brand-deep: #2a338f;
+  --accent: #ec8264;
+  --accent-ink: #0c0f1e;
+
+  --fixed: #d9d3c7;
+  --fixed-soft: #2a2f45;
+  --estimated: #f3bd57;
+  --estimated-soft: #3d3014;
+  --confirmed: #5fd3a0;
+  --confirmed-soft: #123a2c;
+
+  --weekend: #181e36;
+  --ring: #8d98ff;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-deep: var(--brand-deep);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-fixed: var(--fixed);
+  --color-fixed-soft: var(--fixed-soft);
+  --color-estimated: var(--estimated);
+  --color-estimated-soft: var(--estimated-soft);
+  --color-confirmed: var(--confirmed);
+  --color-confirmed-soft: var(--confirmed-soft);
+  --color-weekend: var(--weekend);
+  --color-ring: var(--ring);
+
+  --font-sans: var(--font-readex), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  /* Horseshoe-arch top, used for countdown tiles and hero cards. */
+  --radius-arch: 999px 999px 1.25rem 1.25rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    font-feature-settings: "tnum" 1;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  ::selection {
+    @apply bg-brand text-brand-ink;
+  }
+}
+
+@utility rounded-arch {
+  border-radius: var(--radius-arch);
+}
+
+/* Zellige-inspired eight-point star tiling, used as a subtle texture. */
+@utility zellige {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='white' stroke-opacity='.14' stroke-width='1.2'%3E%3Cpath d='M28 8l6 14 14 6-14 6-6 14-6-14-14-6 14-6z'/%3E%3Cpath d='M28 14l4.2 9.8L42 28l-9.8 4.2L28 42l-4.2-9.8L14 28l9.8-4.2z' transform='rotate(45 28 28)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 56px 56px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat component styles */
+    animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: reduced motion must beat component styles */
+    transition-duration: 0.01ms !important;
+  }
+}

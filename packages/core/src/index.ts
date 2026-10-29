@@ -11,6 +11,7 @@ export {
   type IsoDate,
   isWeekend,
   parseIsoDate,
+  startOfDayInCasablanca,
   TIME_ZONE,
   todayInCasablanca,
 } from "./date";

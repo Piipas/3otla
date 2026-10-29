@@ -51,6 +51,22 @@ Moroccan public holidays: website + free public API. Trilingual (ar RTL, fr, en)
   are only set on responses the CDN won't share (errors, 429).
 - The OpenAPI spec is generated from the route schemas; `/docs` renders it with Scalar.
 
+## Website (`apps/web/app/[locale]`)
+
+- next-intl with `/ar`, `/fr`, `/en` (always prefixed). Strings live in `apps/web/messages/*.json`;
+  keep the three files in sync. Arabic plurals need all ICU categories.
+- Dates are formatted with `INTL_LOCALE` (`ar-MA` gives Moroccan month names with Latin digits).
+- Theme tokens are CSS variables in `src/styles/globals.css` (`bg-bg`, `text-ink`, `bg-brand`,
+  `text-estimated`, …). Use them instead of raw Tailwind colours. Status colours have meaning:
+  fixed = ink, estimated = saffron, confirmed = green.
+- Pages are statically generated (last year to two years ahead) and fall back to on-demand
+  rendering for other supported years. Home revalidates hourly because "next holiday" depends
+  on today. Anything "today"-dependent in a static page must be computed on the client
+  (`Countdown`, `TodayMarker`).
+- OG images use Satori, which neither shapes Arabic nor reorders RTL text: pass every string
+  through `toVisual` (`src/lib/arabic-shaping.ts`).
+- E2E: `pnpm --filter @3otla/web build && pnpm --filter @3otla/web e2e` (Playwright).
+
 ## Commands
 
 ```bash

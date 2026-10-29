@@ -1,0 +1,113 @@
+{
+  "meta": {
+    "siteName": "3otla",
+    "title": "3otla — Jours fériés au Maroc",
+    "description": "Tous les jours fériés au Maroc, nationaux et religieux, avec leur statut (fixe, estimé, confirmé) et leur source officielle. Calendrier, compte à rebours et API gratuite.",
+    "yearTitle": "Jours fériés au Maroc en {year}",
+    "yearDescription": "Calendrier {year} des jours fériés au Maroc : fêtes nationales et religieuses, dates estimées et confirmées, avec sources officielles.",
+    "holidayTitle": "{name} {year} au Maroc : date",
+    "holidayDescription": "{name} {year} au Maroc : {date}. Statut : {status}. Source officielle et compte à rebours.",
+    "sourcesTitle": "Sources et méthode"
+  },
+  "nav": {
+    "home": "Accueil",
+    "calendar": "Calendrier",
+    "sources": "Sources",
+    "api": "API",
+    "skip": "Aller au contenu"
+  },
+  "home": {
+    "kicker": "Prochain jour férié",
+    "today": "C’est aujourd’hui",
+    "inProgress": "En cours jusqu’au {date}",
+    "upcoming": "Prochains jours fériés",
+    "seeCalendar": "Voir le calendrier {year}",
+    "intro": "Les jours fériés du Maroc, avec pour chaque date son statut et sa source officielle."
+  },
+  "countdown": {
+    "label": "Compte à rebours",
+    "days": "{count, plural, one {jour} other {jours}}",
+    "hours": "{count, plural, one {heure} other {heures}}",
+    "minutes": "{count, plural, one {minute} other {minutes}}",
+    "seconds": "{count, plural, one {seconde} other {secondes}}"
+  },
+  "status": {
+    "fixed": "Date fixe",
+    "estimated": "Estimée",
+    "confirmed": "Confirmée",
+    "fixedHelp": "Date fixée chaque année par les textes officiels.",
+    "estimatedHelp": "Estimation selon le calendrier Umm al-Qura. Au Maroc, la date dépend de l’observation du croissant et peut être décalée d’un jour.",
+    "confirmedHelp": "Date annoncée officiellement par le ministère des Habous et des Affaires islamiques.",
+    "source": "Voir la source"
+  },
+  "calendars": {
+    "national": "Fêtes nationales",
+    "religious": "Fêtes religieuses",
+    "all": "Tous les jours fériés"
+  },
+  "holiday": {
+    "days": "{count, plural, one {# jour} other {# jours}}",
+    "until": "jusqu’au {date}",
+    "hijri": "Date hégirienne",
+    "officialSource": "Source officielle",
+    "decisions": "Textes officiels",
+    "scope": {
+      "all": "Tous secteurs",
+      "public-sector": "Secteur public",
+      "private-sector": "Secteur privé"
+    },
+    "dateSource": "Origine de la date",
+    "announcement": "Annonce officielle du {date}",
+    "otherYears": "Autres années",
+    "passed": "Ce jour férié est passé.",
+    "notObserved": "Pas de jour férié cette année.",
+    "inDays": "{count, plural, =0 {aujourd’hui} one {dans # jour} other {dans # jours}}",
+    "estimateNote": "Date estimée : elle sera confirmée après l’annonce officielle de l’observation du croissant."
+  },
+  "calendar": {
+    "title": "Calendrier {year}",
+    "prev": "Année précédente",
+    "next": "Année suivante",
+    "legend": "Légende",
+    "weekend": "Week-end",
+    "today": "Aujourd’hui",
+    "list": "Liste des jours fériés {year}",
+    "count": "{count, plural, one {# jour férié} other {# jours fériés}}"
+  },
+  "subscribe": {
+    "button": "S’abonner",
+    "title": "Ajouter à votre agenda",
+    "google": "Google Agenda",
+    "apple": "Apple Calendrier",
+    "copy": "Copier le lien",
+    "copied": "Lien copié",
+    "hint": "Les dates estimées se mettent à jour automatiquement une fois confirmées."
+  },
+  "sources": {
+    "title": "Sources et méthode",
+    "intro": "Chaque date affichée sur 3otla indique son statut et renvoie à une source officielle. Nous n’utilisons jamais d’agrégateurs ni de sites d’actualité comme source.",
+    "nationalTitle": "Fêtes nationales",
+    "nationalBody": "Les jours fériés nationaux suivent la liste officielle publiée sur le portail national du Maroc (maroc.ma) et les décrets correspondants.",
+    "religiousTitle": "Fêtes religieuses",
+    "religiousBody": "Les dates des fêtes religieuses sont d’abord estimées avec le calendrier Umm al-Qura. Le Maroc fixe ces dates par l’observation locale du croissant : la date réelle peut donc être un jour plus tard. Dès que le ministère des Habous annonce la date, elle passe au statut « confirmée » avec un lien vers l’annonce.",
+    "statusTitle": "Les trois statuts",
+    "correctionsTitle": "Signaler une erreur",
+    "correctionsBody": "Les données sont publiques et versionnées sur GitHub. Toute correction doit citer une source officielle.",
+    "licenseTitle": "Licence",
+    "licenseBody": "Données sous licence CC BY 4.0, code sous licence MIT.",
+    "list": "Sources utilisées"
+  },
+  "footer": {
+    "tagline": "Les jours fériés au Maroc, avec leurs sources.",
+    "api": "API gratuite",
+    "data": "Données CC BY 4.0"
+  },
+  "ui": {
+    "theme": "Changer de thème",
+    "language": "Langue"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "back": "Retour à l’accueil"
+  }
+}
