@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { AppLocale } from "@/i18n/routing";
 import { occurrencesStartingIn } from "@/lib/holidays";
+import { getCore } from "@/lib/live-data";
 import { holidayOgImage, OG_SIZE } from "@/lib/og";
 import { parseYear } from "@/lib/site";
 
@@ -16,7 +17,7 @@ export default async function Image({
 }) {
   const { locale, year: rawYear, slug } = await params;
   const year = parseYear(rawYear);
-  const [occ] = year ? occurrencesStartingIn(year, slug) : [];
+  const [occ] = year ? occurrencesStartingIn(year, slug, await getCore()) : [];
   if (!occ) return new Response("Not found", { status: 404 });
   const t = await getTranslations({ locale });
   return holidayOgImage(occ, locale, {

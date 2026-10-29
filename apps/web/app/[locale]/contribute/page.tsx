@@ -7,7 +7,7 @@ import { ContributeForm } from "@/components/contribute-form";
 import { FadeIn } from "@/components/motion";
 import { Card } from "@/components/ui/card";
 import type { AppLocale } from "@/i18n/routing";
-import { alternates, REPO_URL } from "@/lib/site";
+import { alternates } from "@/lib/site";
 
 type Params = Promise<{ locale: AppLocale }>;
 
@@ -41,7 +41,6 @@ export default async function ContributePage({ params }: { params: Params }) {
             <ContributeForm
               hijriHolidays={hijriHolidays}
               defaultHijriYear={toHijri(todayInCasablanca()).year}
-              repoUrl={REPO_URL ?? "https://github.com/Piipas/3otla"}
             />
           </Suspense>
         </FadeIn>

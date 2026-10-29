@@ -1,7 +1,7 @@
 "use client";
 
 import { checkSourceUrl } from "@3otla/data/sources";
-import { CheckCircle2, ExternalLink, Loader2, Send } from "lucide-react";
+import { CheckCircle2, Loader2, Send } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { type FormEvent, type ReactNode, useEffect, useId, useRef, useState } from "react";
@@ -14,17 +14,11 @@ type Kind = (typeof KINDS)[number];
 type Values = Record<string, string>;
 type Errors = Partial<Record<string, string>>;
 
-type State =
-  | { step: "editing" }
-  | { step: "sending" }
-  | { step: "sent"; number: number; url: string }
-  | { step: "fallback"; url: string };
+type State = { step: "editing" } | { step: "sending" } | { step: "sent" } | { step: "unavailable" };
 
 export interface ContributeFormProps {
   hijriHolidays: { id: string; label: string }[];
   defaultHijriYear: number;
-  /** GitHub repository, for the fallback when direct sending is unavailable. */
-  repoUrl: string;
 }
 
 const FIELDS: Record<Kind, string[]> = {
@@ -49,8 +43,8 @@ const REQUIRED: Record<Kind, string[]> = {
 
 const isKind = (v: string | null): v is Kind => KINDS.includes(v as Kind);
 
-/** Contribution form: validates on the client, posts to the API, falls back to GitHub. */
-export function ContributeForm({ hijriHolidays, defaultHijriYear, repoUrl }: ContributeFormProps) {
+/** Contribution form: validates on the client, then posts to the API for admin review. */
+export function ContributeForm({ hijriHolidays, defaultHijriYear }: ContributeFormProps) {
   const t = useTranslations("contribute");
   const params = useSearchParams();
   const formId = useId();
@@ -111,16 +105,6 @@ export function ContributeForm({ hijriHolidays, defaultHijriYear, repoUrl }: Con
     return body;
   }
 
-  function githubFallbackUrl() {
-    const body = payload();
-    const lines = Object.entries(body).map(([k, v]) => `- **${k}**: ${v}`);
-    const url = new URL(`${repoUrl}/issues/new`);
-    url.searchParams.set("title", `Contribution (${kind})`);
-    url.searchParams.set("labels", "contribution");
-    url.searchParams.set("body", lines.join("\n"));
-    return url.toString();
-  }
-
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setServerError(null);
@@ -141,13 +125,12 @@ export function ContributeForm({ hijriHolidays, defaultHijriYear, repoUrl }: Con
       });
       const json = await res.json().catch(() => null);
       if (res.status === 201 && json?.data) {
-        setState({ step: "sent", number: json.data.issue, url: json.data.url });
+        setState({ step: "sent" });
         return;
       }
       setState({ step: "editing" });
       const code: string | undefined = json?.error?.code;
-      if (code === "contributions_disabled")
-        setState({ step: "fallback", url: githubFallbackUrl() });
+      if (code === "contributions_disabled") setState({ step: "unavailable" });
       else if (code === "invalid_source") setErrors({ sourceUrl: t("errors.source") });
       else if (code === "implausible_date") setErrors({ date: t("errors.implausible") });
       else if (res.status === 429) setServerError(t("errors.rateLimited"));
@@ -166,12 +149,8 @@ export function ContributeForm({ hijriHolidays, defaultHijriYear, repoUrl }: Con
       >
         <CheckCircle2 className="size-8 text-confirmed" aria-hidden="true" />
         <h2 className="mt-4 text-2xl font-semibold">{t("success.title")}</h2>
-        <p className="mt-2 text-muted">{t("success.body", { number: state.number })}</p>
+        <p className="mt-2 text-muted">{t("success.body")}</p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href={state.url} target="_blank" rel="noopener" className={buttonVariants()}>
-            {t("success.link")}
-            <ExternalLink aria-hidden="true" />
-          </a>
           <button
             type="button"
             className={buttonVariants({ variant: "outline" })}
@@ -394,22 +373,13 @@ export function ContributeForm({ hijriHolidays, defaultHijriYear, repoUrl }: Con
         </label>
       </div>
 
-      {state.step === "fallback" ? (
+      {state.step === "unavailable" ? (
         <div
           role="status"
           className="rounded-lg border border-estimated/40 bg-estimated-soft/50 p-4"
         >
           <p className="font-semibold">{t("disabled.title")}</p>
           <p className="mt-1 text-sm text-muted">{t("disabled.body")}</p>
-          <a
-            href={state.url}
-            target="_blank"
-            rel="noopener"
-            className={cn(buttonVariants({ size: "sm" }), "mt-3")}
-          >
-            {t("disabled.link")}
-            <ExternalLink aria-hidden="true" />
-          </a>
         </div>
       ) : null}
 

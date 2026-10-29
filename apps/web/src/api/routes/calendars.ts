@@ -1,4 +1,4 @@
-import { generateIcs, generateSchoolIcs, SUPPORTED_YEARS, todayInCasablanca } from "@3otla/core";
+import { SUPPORTED_YEARS, todayInCasablanca } from "@3otla/core";
 import { createRoute, z } from "@hono/zod-openapi";
 import { cacheFor } from "../cache";
 import type { ApiApp, ApiContext } from "../context";
@@ -50,7 +50,8 @@ const icsRoute = createRoute({
 });
 
 export function registerCalendarRoutes(app: ApiApp, ctx: ApiContext) {
-  app.openapi(icsRoute, (c) => {
+  app.openapi(icsRoute, async (c) => {
+    const core = await ctx.core();
     const { file } = c.req.valid("param");
     const { lang } = c.req.valid("query");
     const today = todayInCasablanca(ctx.now());
@@ -60,8 +61,8 @@ export function registerCalendarRoutes(app: ApiApp, ctx: ApiContext) {
     const now = new Date(`${today}T00:00:00Z`);
     const ics =
       calendar === "school-public"
-        ? generateSchoolIcs(calendar, { lang, baseUrl: ctx.baseUrl, now })
-        : generateIcs(calendar as "all" | "national" | "religious", {
+        ? core.generateSchoolIcs(calendar, { lang, baseUrl: ctx.baseUrl, now })
+        : core.generateIcs(calendar as "all" | "national" | "religious", {
             lang,
             fromYear: Math.max(SUPPORTED_YEARS.min, year - 1),
             toYear: Math.min(SUPPORTED_YEARS.max, year + 2),

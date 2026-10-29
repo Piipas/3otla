@@ -1,4 +1,4 @@
-import type { HolidayOccurrence, Locale } from "@3otla/core";
+import type { Core, HolidayOccurrence, Locale } from "@3otla/core";
 import type { OpenAPIHono } from "@hono/zod-openapi";
 import { DOCS_URL } from "./errors";
 import type { Holiday, Meta } from "./schemas";
@@ -10,6 +10,8 @@ export interface ApiContext {
   baseUrl: string;
   /** Changes on every deploy (git SHA on Vercel). */
   dataVersion: string;
+  /** Repository data plus live accepted announcements (src/lib/live-data.ts). */
+  core: () => Promise<Core>;
 }
 
 export type ApiApp = OpenAPIHono;

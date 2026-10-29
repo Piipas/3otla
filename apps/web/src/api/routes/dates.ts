@@ -1,4 +1,4 @@
-import { isHoliday, toHijri, workdays } from "@3otla/core";
+import { toHijri } from "@3otla/core";
 import { createRoute, z } from "@hono/zod-openapi";
 import { cacheFor } from "../cache";
 import { type ApiApp, type ApiContext, calendarsFor, meta, toHoliday } from "../context";
@@ -116,10 +116,10 @@ const hijriRoute = createRoute({
 });
 
 export function registerDateRoutes(app: ApiApp, ctx: ApiContext) {
-  app.openapi(isHolidayRoute, (c) => {
+  app.openapi(isHolidayRoute, async (c) => {
     const { date } = c.req.valid("param");
     const { calendar, lang } = c.req.valid("query");
-    const res = isHoliday(date, calendarsFor(calendar));
+    const res = (await ctx.core()).isHoliday(date, calendarsFor(calendar));
     cacheFor(c, "static");
     return c.json(
       {
@@ -130,9 +130,9 @@ export function registerDateRoutes(app: ApiApp, ctx: ApiContext) {
     );
   });
 
-  app.openapi(workdaysRoute, (c) => {
+  app.openapi(workdaysRoute, async (c) => {
     const { from, to, calendar, lang } = c.req.valid("query");
-    const res = workdays(from, to, calendarsFor(calendar));
+    const res = (await ctx.core()).workdays(from, to, calendarsFor(calendar));
     cacheFor(c, "static");
     return c.json(
       {

@@ -1,11 +1,4 @@
-import {
-  addDays,
-  dayOfWeek,
-  type HolidayOccurrence,
-  type IsoDate,
-  isWeekend,
-  resolveHolidays,
-} from "@3otla/core";
+import { addDays, dayOfWeek, type HolidayOccurrence, type IsoDate, isWeekend } from "@3otla/core";
 import { useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
@@ -25,10 +18,17 @@ const STATUS_CELL = {
 } as const;
 
 /** Twelve month grids, Monday first. Holiday days link to their page. */
-export function YearCalendar({ year }: { year: number }) {
+export function YearCalendar({
+  year,
+  holidays,
+}: {
+  year: number;
+  /** Every occurrence overlapping `year`. */
+  holidays: HolidayOccurrence[];
+}) {
   const locale = useLocale() as AppLocale;
   const byDate = new Map<IsoDate, HolidayOccurrence[]>();
-  for (const occ of resolveHolidays(year)) {
+  for (const occ of holidays) {
     for (let i = 0; i < occ.durationDays; i++) {
       const d = addDays(occ.date, i);
       byDate.set(d, [...(byDate.get(d) ?? []), occ]);

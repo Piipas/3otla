@@ -1,6 +1,6 @@
 import { dataset } from "@3otla/data";
 import { describe, expect, it } from "vitest";
-import { createResolver, diffDays, fromHijri } from "../src/index";
+import { createCore, createResolver, diffDays, fromHijri, withConfirmations } from "../src/index";
 
 const HABOUS = "https://www.habous.gov.ma/annonce-example";
 
@@ -74,5 +74,35 @@ describe("official confirmations.json", () => {
       expect(estimate, `${c.holidayId}:${c.hijriYear}`).not.toBeNull();
       expect(Math.abs(diffDays(estimate as string, c.date))).toBeLessThanOrEqual(2);
     }
+  });
+});
+
+describe("withConfirmations (admin-accepted announcements)", () => {
+  const accepted = {
+    holidayId: "eid-al-adha",
+    hijriYear: 1448,
+    date: "2027-05-17",
+    announcedAt: "2027-05-07T19:30:00+01:00",
+    sourceUrl: HABOUS,
+  };
+
+  it("applies an extra confirmation to holidays and school breaks alike", () => {
+    const core = createCore(withConfirmations(dataset, [accepted]));
+    expect(core.nextHolidays("2027-05-01", 3).find((o) => o.id === "eid-al-adha")).toMatchObject({
+      date: "2027-05-17",
+      status: "confirmed",
+    });
+    const brk = core
+      .schoolYear("school-public", "2026-2027")
+      .breaks.find((b) => b.id === "eid-al-adha-break");
+    expect(brk).toMatchObject({ status: "confirmed", date: "2027-05-16", endDate: "2027-05-18" });
+  });
+
+  it("keeps the repository's confirmation when both exist", () => {
+    const base = { ...dataset, confirmations: [{ ...accepted, date: "2027-05-16" }] };
+    const merged = withConfirmations(base, [accepted]);
+    expect(merged.confirmations).toHaveLength(1);
+    expect(merged.confirmations[0]?.date).toBe("2027-05-16");
+    expect(withConfirmations(dataset, [])).toBe(dataset);
   });
 });

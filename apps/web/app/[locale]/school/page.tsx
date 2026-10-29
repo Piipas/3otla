@@ -2,9 +2,7 @@ import {
   addDays,
   diffDays,
   type HolidayOccurrence,
-  nextSchoolBreaks,
   type SchoolBreak,
-  schoolYear,
   startOfDayInCasablanca,
   todayInCasablanca,
 } from "@3otla/core";
@@ -20,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { formatDate, formatHijri, formatOccurrenceDates } from "@/lib/format";
+import { getCore } from "@/lib/live-data";
 import { alternates, currentYear, feedLinks } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -33,7 +32,7 @@ type Params = Promise<{ locale: AppLocale }>;
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "school" });
-  const { schoolYear: label } = schoolYear(CALENDAR);
+  const { schoolYear: label } = (await getCore()).schoolYear(CALENDAR);
   return {
     title: t("title", { schoolYear: label.replace("-", "/") }),
     description: t("metaDescription", { schoolYear: label.replace("-", "/") }),
@@ -49,9 +48,10 @@ export default async function SchoolPage({ params }: { params: Params }) {
   setRequestLocale(locale);
   const t = await getTranslations();
   const today = todayInCasablanca();
-  const year = schoolYear(CALENDAR, undefined, today);
+  const core = await getCore();
+  const year = core.schoolYear(CALENDAR, undefined, today);
   const label = year.schoolYear.replace("-", "/");
-  const [next] = nextSchoolBreaks(today, CALENDAR, 1);
+  const [next] = core.nextSchoolBreaks(today, CALENDAR, 1);
   const upcoming = next && next.schoolYear === year.schoolYear ? next : undefined;
   const decision = year.decisionRefs?.find((d) => d.kind === "ministerial-decision");
 

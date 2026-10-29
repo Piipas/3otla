@@ -1,4 +1,4 @@
-import { addDays, nextHolidays, startOfDayInCasablanca, todayInCasablanca } from "@3otla/core";
+import { addDays, startOfDayInCasablanca, todayInCasablanca } from "@3otla/core";
 import { ArrowRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Countdown } from "@/components/countdown";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { formatDate, formatHijri, formatOccurrenceDates } from "@/lib/format";
+import { getCore } from "@/lib/live-data";
 import { feedLinks } from "@/lib/site";
 
 // "Next holiday" depends on today: regenerate hourly.
@@ -21,7 +22,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: A
   const t = await getTranslations();
 
   const today = todayInCasablanca();
-  const [next, ...upcoming] = nextHolidays(today, 7);
+  const [next, ...upcoming] = (await getCore()).nextHolidays(today, 7);
   if (!next) return null;
   const ongoing = next.date <= today;
   const year = Number(today.slice(0, 4));

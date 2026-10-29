@@ -139,8 +139,8 @@
     "intro": "Une date est fausse ou une annonce officielle vient de tomber ? Envoyez-la ici. Chaque contribution est relue par un mainteneur avant d’être publiée.",
     "howTitle": "Comment ça marche",
     "step1": "Vous envoyez le formulaire avec un lien vers une source officielle.",
-    "step2": "Votre contribution devient une demande publique sur GitHub, relue par un mainteneur.",
-    "step3": "Acceptée, elle met à jour les données au prochain déploiement. Refusée, la demande est fermée avec une explication.",
+    "step2": "Votre contribution attend, sans être publiée, la relecture d’un administrateur.",
+    "step3": "Acceptée, une date annoncée apparaît aussitôt sur le site et dans l’API. Refusée, rien ne change.",
     "kindLabel": "Type de contribution",
     "kinds": {
       "confirmation": {
@@ -173,7 +173,7 @@
       "contact": "Votre nom ou pseudo GitHub",
       "optional": "facultatif"
     },
-    "publicNotice": "Votre contribution sera publiée sur GitHub. N’y mettez aucune information personnelle.",
+    "publicNotice": "Un administrateur relit chaque contribution avant tout changement sur le site. N’y mettez aucune information personnelle.",
     "submit": "Envoyer la contribution",
     "submitting": "Envoi…",
     "errors": {
@@ -189,17 +189,55 @@
     },
     "success": {
       "title": "Merci, c’est envoyé !",
-      "body": "Votre contribution n° {number} attend la relecture d’un mainteneur. Vous pouvez la suivre sur GitHub.",
-      "link": "Suivre sur GitHub",
+      "body": "Votre contribution attend la relecture d’un administrateur.",
       "another": "Envoyer une autre contribution"
     },
     "disabled": {
-      "title": "Envoi direct indisponible",
-      "body": "Continuez sur GitHub : la demande est préremplie avec vos réponses (un compte GitHub est nécessaire).",
-      "link": "Continuer sur GitHub"
+      "title": "Envoi indisponible",
+      "body": "Les contributions ne peuvent pas être reçues pour le moment. Réessayez plus tard."
     },
     "cta": "Contribuer",
     "suggestFix": "Signaler une erreur",
     "sendAnnouncement": "Envoyer l’annonce officielle"
+  },
+  "admin": {
+    "title": "Contributions",
+    "signInTitle": "Connexion administrateur",
+    "signInBody": "Seuls les comptes GitHub autorisés peuvent relire les contributions.",
+    "signIn": "Se connecter avec GitHub",
+    "signOut": "Se déconnecter",
+    "signedInAs": "Connecté en tant que {login}",
+    "tabs": {
+      "pending": "En attente",
+      "accepted": "Acceptées",
+      "rejected": "Refusées"
+    },
+    "empty": "Rien ici.",
+    "submitted": "Envoyée le {date}",
+    "decided": "{status, select, accepted {Acceptée} other {Refusée}} par {login} le {date}",
+    "estimate": "Estimation : {date}",
+    "officialSource": "Source officielle",
+    "appliesLive": "Accepter applique cette date immédiatement sur le site et dans l’API.",
+    "recordOnly": "Accepter enregistre la décision. Les données doivent être mises à jour à la main.",
+    "note": "Note (facultatif)",
+    "accept": "Accepter",
+    "reject": "Refuser",
+    "revert": "Annuler",
+    "done": {
+      "accepted": "Contribution acceptée.",
+      "rejected": "Contribution refusée.",
+      "revert": "Acceptation annulée."
+    },
+    "errors": {
+      "forbidden": "Ce compte n’est pas autorisé à relire les contributions.",
+      "oauth": "La connexion a échoué. Réessayez.",
+      "not_configured": "La connexion administrateur n’est pas configurée sur ce serveur.",
+      "store": "Le stockage des contributions (Upstash Redis) n’est pas configuré.",
+      "already_confirmed": "Cette fête est déjà confirmée. Annulez d’abord l’autre confirmation.",
+      "not_pending": "Cette contribution a déjà été traitée.",
+      "not_accepted": "Seules les contributions acceptées peuvent être annulées.",
+      "not_found": "Contribution introuvable.",
+      "generic": "Une erreur est survenue. Réessayez."
+    }
   }
 }

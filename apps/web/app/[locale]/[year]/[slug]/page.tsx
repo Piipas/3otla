@@ -13,6 +13,7 @@ import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { formatDate, formatHijri, formatOccurrenceDates } from "@/lib/format";
 import { definition, HOLIDAY_IDS, occurrencesStartingIn, yearsWithHoliday } from "@/lib/holidays";
+import { getCore } from "@/lib/live-data";
 import { alternates, feedLinks, parseYear, SITE_URL, staticYears } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -27,17 +28,18 @@ export function generateStaticParams() {
   );
 }
 
-function load(rawYear: string, slug: string) {
+async function load(rawYear: string, slug: string) {
   const year = parseYear(rawYear);
   const def = definition(slug);
   if (!year || !def) return null;
-  const occurrences = occurrencesStartingIn(year, slug);
+  const core = await getCore();
+  const occurrences = occurrencesStartingIn(year, slug, core);
   return occurrences.length > 0 ? { year, def, occurrences } : null;
 }
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { locale, year: rawYear, slug } = await params;
-  const data = load(rawYear, slug);
+  const data = await load(rawYear, slug);
   if (!data) return {};
   const t = await getTranslations({ locale });
   const [occ] = data.occurrences as [HolidayOccurrence];
@@ -57,7 +59,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function HolidayPage({ params }: { params: Params }) {
   const { locale, year: rawYear, slug } = await params;
   setRequestLocale(locale);
-  const data = load(rawYear, slug);
+  const data = await load(rawYear, slug);
   if (!data) notFound();
   const { year, def, occurrences } = data;
   const t = await getTranslations();

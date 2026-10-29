@@ -11,6 +11,7 @@ import { CalendarLegend, YearCalendar } from "@/components/year-calendar";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { holidaysStartingIn } from "@/lib/holidays";
+import { getCore } from "@/lib/live-data";
 import { alternates, feedLinks, parseYear, staticYears } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +39,8 @@ export default async function YearPage({ params }: { params: Params }) {
   const year = parseYear(raw);
   if (!year) notFound();
   const t = await getTranslations();
-  const holidays = holidaysStartingIn(year);
+  const core = await getCore();
+  const holidays = holidaysStartingIn(year, core);
   const prev = year > SUPPORTED_YEARS.min ? year - 1 : null;
   const next = year < SUPPORTED_YEARS.max ? year + 1 : null;
   const navBtn = cn(buttonVariants({ variant: "outline", size: "icon" }));
@@ -84,7 +86,7 @@ export default async function YearPage({ params }: { params: Params }) {
               }}
             />
           </div>
-          <YearCalendar year={year} />
+          <YearCalendar year={year} holidays={core.resolveHolidays(year)} />
         </div>
 
         <section aria-labelledby="list" className="mt-14">

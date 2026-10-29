@@ -2,9 +2,7 @@ import {
   type Labels,
   type Locale,
   MAX_NEXT_COUNT,
-  nextSchoolBreaks,
   type SchoolBreak,
-  schoolYear,
   todayInCasablanca,
 } from "@3otla/core";
 import { createRoute, z } from "@hono/zod-openapi";
@@ -108,10 +106,10 @@ const nextRoute = createRoute({
 });
 
 export function registerSchoolRoutes(app: ApiApp, ctx: ApiContext) {
-  app.openapi(yearRoute, (c) => {
+  app.openapi(yearRoute, async (c) => {
     const { calendar } = c.req.valid("param");
     const { schoolYear: wanted, lang } = c.req.valid("query");
-    const year = schoolYear(calendar, wanted, todayInCasablanca(ctx.now()));
+    const year = (await ctx.core()).schoolYear(calendar, wanted, todayInCasablanca(ctx.now()));
     cacheFor(c, wanted === undefined ? "today" : "static");
     return c.json(
       {
@@ -136,12 +134,12 @@ export function registerSchoolRoutes(app: ApiApp, ctx: ApiContext) {
     );
   });
 
-  app.openapi(nextRoute, (c) => {
+  app.openapi(nextRoute, async (c) => {
     const { calendar } = c.req.valid("param");
     const { count, from, lang } = c.req.valid("query");
-    const data = nextSchoolBreaks(from ?? todayInCasablanca(ctx.now()), calendar, count).map((b) =>
-      toBreak(b, lang),
-    );
+    const data = (await ctx.core())
+      .nextSchoolBreaks(from ?? todayInCasablanca(ctx.now()), calendar, count)
+      .map((b) => toBreak(b, lang));
     cacheFor(c, from === undefined ? "today" : "static");
     return c.json({ data, meta: meta(ctx) }, 200);
   });

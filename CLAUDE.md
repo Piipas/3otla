@@ -4,10 +4,14 @@ Moroccan public holidays: website + free public API. Trilingual (ar RTL, fr, en)
 
 ## Non-negotiables
 
-- **Git is the holiday database.** Holidays live only in `packages/data` (JSON). No DB, no CMS.
-  A data change is a commit; a deploy publishes it.
+- **Git is the holiday database.** Rules and dates live in `packages/data` (JSON). A data change
+  is a commit; a deploy publishes it. The one exception: religious-holiday announcements
+  accepted by an admin on `/admin` are stored in Redis and applied live on top
+  (`withConfirmations` in core, `getCore()` in `apps/web/src/lib/live-data.ts`). The
+  repository wins on conflict.
 - **Logic lives in `packages/core`.** The API and the web app call core; they never compute
-  dates themselves. Server components import `@3otla/core` directly, never the public API.
+  dates themselves. Pages and the API get it from `await getCore()` (repository data plus
+  live announcements), never from the public API or core's static `default*` exports.
 - **Every data change needs an official `sourceUrl`** (maroc.ma, `*.gov.ma` such as
   habous.gov.ma / men.gov.ma, MAP). Allowlist in `packages/data/src/sources.ts`, enforced by tests.
 - **Never use aggregators** (Calendarific, holidayapi, timeanddate, Wikipedia, news or job
@@ -71,6 +75,16 @@ Moroccan public holidays: website + free public API. Trilingual (ar RTL, fr, en)
 - OG images use Satori, which neither shapes Arabic nor reorders RTL text: pass every string
   through `toVisual` (`src/lib/arabic-shaping.ts`).
 - E2E: `pnpm --filter @3otla/web build && pnpm --filter @3otla/web e2e` (Playwright).
+
+## Contributions and admin
+
+- `POST /api/v1/contributions` (not in the OpenAPI spec) validates and stores a contribution
+  as pending in Redis (`src/lib/contribution-store.ts`; in-memory in `next dev`).
+- `/[locale]/admin`: GitHub OAuth (`app/api/admin/*`, hand-written, no auth library), allowlist
+  `ADMIN_GITHUB_USERS`, HMAC-signed httpOnly session (`src/lib/admin-auth.ts`). Decisions are
+  server actions (`src/lib/admin-actions.ts`) that re-check the admin, then purge
+  `LIVE_TAG` (pages) and the `Vercel-Cache-Tag` of API responses (CDN).
+- In `next dev` without a GitHub app, “Sign in” logs you in as `dev` (never in production).
 
 ## Commands
 

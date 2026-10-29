@@ -2,19 +2,22 @@
 
 Thanks for helping keep Moroccan holiday dates correct.
 
-## From the website (no GitHub account needed)
+## From the website (no account needed)
 
-Use [/contribute](https://3otla.vercel.app/en/contribute). The form checks the source
-against the official allowlist and opens an issue labelled `contribution`. Maintainers
-moderate with labels:
+Use [/contribute](https://3otla.vercel.app/en/contribute). The form checks the source against
+the official allowlist (and, for an announcement, that the date is within two days of the
+estimate), then stores the contribution as pending. It is not published.
 
-- `accepted`: a confirmation becomes a pull request on `packages/data/confirmations.json`
-  (`.github/workflows/contributions.yml`, tests run first); other kinds get a comment and
-  are applied by hand.
-- `rejected`: the issue is closed as "not planned" with an explanation.
+Admins review it on `/admin` (GitHub sign-in, allowlist in `ADMIN_GITHUB_USERS`):
 
-The site needs `GITHUB_CONTRIBUTIONS_TOKEN` (fine-grained, Issues read/write on this repo);
-without it the form falls back to a pre-filled GitHub issue.
+- **Accept** an Eid, Mawlid or Islamic New Year announcement: the date becomes `confirmed`
+  live on the site and in the API, with no deploy. **Revert** undoes it.
+- **Accept** a correction or a school calendar: the decision is recorded; the data files
+  are then updated by hand as described below.
+- **Reject**: nothing changes.
+
+Accepted announcements live in Redis on top of the repository data. To make one permanent,
+copy it into `packages/data/confirmations.json` (the repository version always wins).
 
 ## Submitting a date correction
 

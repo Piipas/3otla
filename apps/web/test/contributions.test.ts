@@ -1,24 +1,10 @@
-import { fromHijri } from "@3otla/core";
-import { describe, expect, it, vi } from "vitest";
+import { createCore, fromHijri, withConfirmations } from "@3otla/core";
+import { dataset } from "@3otla/data";
+import { describe, expect, it } from "vitest";
 import { createApi } from "@/api/app";
-import {
-  type ContributionSink,
-  githubSinkFromEnv,
-  type IssueDraft,
-  moroccoOffsetIso,
-  PAYLOAD_MARKER,
-} from "@/api/contributions";
-
-function fakeSink() {
-  const issues: IssueDraft[] = [];
-  const sink: ContributionSink = {
-    async create(issue) {
-      issues.push(issue);
-      return { number: 42, url: "https://github.com/Piipas/3otla/issues/42" };
-    },
-  };
-  return { sink, issues };
-}
+import { moroccoOffsetIso } from "@/api/contributions";
+import { isAllowed, signSession, verifySession } from "@/lib/admin-auth";
+import { createMemoryStore, StoreError } from "@/lib/contribution-store";
 
 const post = (app: ReturnType<typeof createApi>, body: unknown) =>
   app.request("/api/v1/contributions", {
@@ -31,7 +17,7 @@ const post = (app: ReturnType<typeof createApi>, body: unknown) =>
 const json = async (res: Response): Promise<any> => res.json();
 
 const fitrEstimate = fromHijri({ year: 1448, month: 10, day: 1 }) as string;
-const confirmation = {
+const announcement = {
   kind: "confirmation",
   holidayId: "eid-al-fitr",
   hijriYear: 1448,
@@ -41,56 +27,49 @@ const confirmation = {
 };
 
 describe("POST /v1/contributions", () => {
-  it("opens an issue with a machine-readable payload for accepted moderation", async () => {
-    const { sink, issues } = fakeSink();
-    const res = await post(createApi({ contributions: sink }), {
-      ...confirmation,
-      details: "Communiqué du ministère @someone #12",
+  it("stores a valid announcement as pending, without the honeypot", async () => {
+    const store = createMemoryStore();
+    const res = await post(createApi({ contributions: store }), {
+      ...announcement,
       contact: "Amina",
     });
     expect(res.status).toBe(201);
     expect(res.headers.get("Cache-Control")).toBe("no-store");
-    expect((await json(res)).data).toEqual({
-      issue: 42,
-      url: "https://github.com/Piipas/3otla/issues/42",
-      status: "pending",
-    });
+    const { data } = await json(res);
+    expect(data).toMatchObject({ status: "pending" });
 
-    const [issue] = issues;
-    expect(issue?.title).toBe(`Confirmation: eid-al-fitr 1448 on ${fitrEstimate}`);
-    expect(issue?.labels).toEqual(["contribution", "kind:confirmation"]);
-    // Free text is fenced so it cannot mention people or reference issues.
-    expect(issue?.body).toContain("~~~text\nCommuniqué du ministère @someone #12\n~~~");
-    const payload = JSON.parse(
-      issue?.body.split(`<!-- ${PAYLOAD_MARKER}\n`)[1]?.split("\n-->")[0] ?? "",
-    );
-    expect(payload.confirmation).toEqual({
+    const [saved] = await store.list("pending");
+    expect(saved?.id).toBe(data.id);
+    expect(saved?.contribution).toMatchObject({ kind: "confirmation", contact: "Amina" });
+    expect(saved?.confirmation).toEqual({
       holidayId: "eid-al-fitr",
       hijriYear: 1448,
       date: fitrEstimate,
+      // Ramadan: Morocco is on UTC+0.
       announcedAt: "2027-03-08T20:30:00+00:00",
       sourceUrl: "https://www.habous.gov.ma/annonce",
     });
-    expect(payload.website).toBeUndefined();
+    // Nothing is live until an admin accepts it.
+    expect(await store.liveConfirmations()).toEqual([]);
   });
 
-  it("rejects aggregators and non-official sources before reaching GitHub", async () => {
-    const { sink, issues } = fakeSink();
-    const app = createApi({ contributions: sink });
+  it("rejects aggregators and non-official sources", async () => {
+    const store = createMemoryStore();
+    const app = createApi({ contributions: store });
     for (const sourceUrl of [
       "https://www.timeanddate.com/holidays/morocco/",
       "https://example.com/eid",
     ]) {
-      const res = await post(app, { ...confirmation, sourceUrl });
+      const res = await post(app, { ...announcement, sourceUrl });
       expect(res.status).toBe(422);
       expect((await json(res)).error.code).toBe("invalid_source");
     }
-    expect(issues).toHaveLength(0);
+    expect((await store.counts()).pending).toBe(0);
   });
 
-  it("rejects a confirmed date far from the estimate", async () => {
-    const res = await post(createApi({ contributions: fakeSink().sink }), {
-      ...confirmation,
+  it("rejects an announced date far from the estimate", async () => {
+    const res = await post(createApi({ contributions: createMemoryStore() }), {
+      ...announcement,
       date: "2027-04-20",
     });
     expect(res.status).toBe(422);
@@ -98,7 +77,7 @@ describe("POST /v1/contributions", () => {
   });
 
   it("validates corrections and the honeypot", async () => {
-    const app = createApi({ contributions: fakeSink().sink });
+    const app = createApi({ contributions: createMemoryStore() });
     const short = await post(app, {
       kind: "correction",
       subject: "Unity Day",
@@ -115,8 +94,8 @@ describe("POST /v1/contributions", () => {
     expect(bot.status).toBe(400);
   });
 
-  it("returns 503 when no sink is configured", async () => {
-    const res = await post(createApi(), confirmation);
+  it("returns 503 when no store is configured", async () => {
+    const res = await post(createApi(), announcement);
     expect(res.status).toBe(503);
     expect((await json(res)).error.code).toBe("contributions_disabled");
   });
@@ -127,24 +106,84 @@ describe("POST /v1/contributions", () => {
   });
 });
 
+describe("admin decisions", () => {
+  async function pendingAnnouncement() {
+    const store = createMemoryStore();
+    await post(createApi({ contributions: store }), announcement);
+    const [item] = await store.list("pending");
+    return { store, id: item?.id as string };
+  }
+
+  it("accepting an announcement makes it live in the API at once", async () => {
+    const { store, id } = await pendingAnnouncement();
+    const accepted = await store.decide(id, "accepted", "Piipas", "Checked on habous.gov.ma");
+    expect(accepted).toMatchObject({ status: "accepted", decidedBy: "Piipas" });
+
+    const api = createApi({
+      core: async () =>
+        createCore(
+          withConfirmations(
+            dataset,
+            (await store.liveConfirmations()).map((l) => l.confirmation),
+          ),
+        ),
+    });
+    const { data } = await json(await api.request("/api/v1/holidays?year=2027&calendar=religious"));
+    expect(data.find((h: { id: string }) => h.id === "eid-al-fitr")).toMatchObject({
+      status: "confirmed",
+      dateSource: { kind: "habous-announcement", url: "https://www.habous.gov.ma/annonce" },
+    });
+  });
+
+  it("rejecting keeps the data unchanged; decisions are final", async () => {
+    const { store, id } = await pendingAnnouncement();
+    await store.decide(id, "rejected", "Piipas");
+    expect(await store.liveConfirmations()).toEqual([]);
+    await expect(store.decide(id, "accepted", "Piipas")).rejects.toMatchObject({
+      code: "not_pending",
+    });
+  });
+
+  it("refuses a second confirmation of the same holiday until the first is reverted", async () => {
+    const { store, id } = await pendingAnnouncement();
+    await store.decide(id, "accepted", "Piipas");
+    await post(createApi({ contributions: store }), announcement);
+    const [second] = await store.list("pending");
+    await expect(store.decide(second?.id as string, "accepted", "Piipas")).rejects.toBeInstanceOf(
+      StoreError,
+    );
+
+    const reverted = await store.revert(id, "Piipas");
+    expect(reverted.status).toBe("rejected");
+    expect(await store.liveConfirmations()).toEqual([]);
+    await store.decide(second?.id as string, "accepted", "Piipas");
+    expect(await store.liveConfirmations()).toHaveLength(1);
+  });
+});
+
+describe("admin sessions", () => {
+  const secret = "x".repeat(40);
+
+  it("round-trips a signed session and rejects tampering and expiry", async () => {
+    const cookie = await signSession("Piipas", secret, 0);
+    expect(await verifySession(cookie, secret, 1000)).toBe("Piipas");
+    expect(await verifySession(cookie.replace("Piipas", "Intruder"), secret, 1000)).toBeNull();
+    expect(await verifySession(cookie, "y".repeat(40), 1000)).toBeNull();
+    expect(await verifySession(cookie, secret, 9 * 60 * 60 * 1000)).toBeNull();
+    expect(await verifySession(undefined, secret)).toBeNull();
+  });
+
+  it("only allows listed GitHub accounts, and the dev account only in development", () => {
+    const env = { ADMIN_GITHUB_USERS: "Piipas, other", NODE_ENV: "production" };
+    expect(isAllowed("piipas", env)).toBe(true);
+    expect(isAllowed("someone", env)).toBe(false);
+    expect(isAllowed("dev", env)).toBe(false);
+    expect(isAllowed("dev", { NODE_ENV: "development" })).toBe(true);
+  });
+});
+
 describe("helpers", () => {
   it("adds Morocco's UTC offset to announcement times", () => {
     expect(moroccoOffsetIso("2026-07-01T21:00")).toBe("2026-07-01T21:00:00+01:00");
-  });
-
-  it("posts to the GitHub issues API with the token", async () => {
-    const fetchMock = vi.fn(async () =>
-      Response.json({ number: 7, html_url: "https://github.com/o/r/issues/7" }),
-    );
-    const sink = githubSinkFromEnv(
-      { GITHUB_CONTRIBUTIONS_TOKEN: "t", GITHUB_CONTRIBUTIONS_REPO: "o/r" },
-      fetchMock as unknown as typeof fetch,
-    );
-    expect(githubSinkFromEnv({})).toBeNull();
-    const out = await sink?.create({ title: "x", body: "y", labels: ["contribution"] });
-    expect(out).toEqual({ number: 7, url: "https://github.com/o/r/issues/7" });
-    const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    expect(url).toBe("https://api.github.com/repos/o/r/issues");
-    expect((init.headers as Record<string, string>).Authorization).toBe("Bearer t");
   });
 });

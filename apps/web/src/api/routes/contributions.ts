@@ -1,25 +1,22 @@
+import type { ContributionStore } from "@/lib/contribution-store";
 import type { ApiApp } from "../context";
-import {
-  ContributionSchema,
-  type ContributionSink,
-  checkContribution,
-  issueFor,
-} from "../contributions";
+import { ContributionSchema, checkContribution } from "../contributions";
 import { apiError } from "../errors";
 
 /**
- * POST /api/v1/contributions — used by the website's contribution form.
+ * POST /api/v1/contributions — used by the website's contribution form. The contribution
+ * is stored as pending until an admin accepts or rejects it on /admin.
  * Deliberately left out of the OpenAPI spec, and CORS only allows GET, so browsers on
  * other origins cannot post here.
  */
-export function registerContributionRoutes(app: ApiApp, sink: ContributionSink | null) {
+export function registerContributionRoutes(app: ApiApp, store: ContributionStore | null) {
   app.post("/v1/contributions", async (c) => {
-    if (!sink) {
+    if (!store) {
       return apiError(
         c,
         503,
         "contributions_disabled",
-        "Contributions are not configured on this server. Open an issue on GitHub instead.",
+        "Contributions are not available right now. Try again later.",
       );
     }
 
@@ -41,12 +38,16 @@ export function registerContributionRoutes(app: ApiApp, sink: ContributionSink |
     const check = checkContribution(parsed.data);
     if (!check.ok) return apiError(c, 422, check.code, check.message);
 
+    const { website: _honeypot, ...contribution } = parsed.data;
     try {
-      const issue = await sink.create(issueFor(parsed.data, check));
+      const saved = await store.add({
+        contribution,
+        ...(check.confirmation ? { confirmation: check.confirmation } : {}),
+      });
       c.header("Cache-Control", "no-store");
-      return c.json({ data: { issue: issue.number, url: issue.url, status: "pending" } }, 201);
+      return c.json({ data: { id: saved.id, status: saved.status } }, 201);
     } catch (error) {
-      console.error("[contributions] could not create issue", error);
+      console.error("[contributions] could not store contribution", error);
       return apiError(
         c,
         502,

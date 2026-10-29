@@ -139,8 +139,8 @@
     "intro": "Spotted a wrong date, or an official announcement just came out? Send it here. Every contribution is reviewed by a maintainer before it is published.",
     "howTitle": "How it works",
     "step1": "You send the form with a link to an official source.",
-    "step2": "Your contribution becomes a public request on GitHub, reviewed by a maintainer.",
-    "step3": "If accepted, the data is updated on the next deploy. If rejected, the request is closed with an explanation.",
+    "step2": "Your contribution waits, privately, for an admin’s review.",
+    "step3": "If accepted, an announced date shows up on the site and in the API right away. If rejected, nothing changes.",
     "kindLabel": "Type of contribution",
     "kinds": {
       "confirmation": {
@@ -173,7 +173,7 @@
       "contact": "Your name or GitHub username",
       "optional": "optional"
     },
-    "publicNotice": "Your contribution will be published on GitHub. Don’t include any personal information.",
+    "publicNotice": "An admin reviews every contribution before anything changes on the site. Don’t include personal information.",
     "submit": "Send contribution",
     "submitting": "Sending…",
     "errors": {
@@ -189,17 +189,55 @@
     },
     "success": {
       "title": "Thank you, it’s sent!",
-      "body": "Your contribution #{number} is waiting for a maintainer’s review. You can follow it on GitHub.",
-      "link": "Follow on GitHub",
+      "body": "Your contribution is waiting for an admin’s review.",
       "another": "Send another contribution"
     },
     "disabled": {
-      "title": "Direct sending unavailable",
-      "body": "Continue on GitHub: the request is pre-filled with your answers (a GitHub account is needed).",
-      "link": "Continue on GitHub"
+      "title": "Sending is unavailable",
+      "body": "Contributions can’t be received right now. Please try again later."
     },
     "cta": "Contribute",
     "suggestFix": "Report a mistake",
     "sendAnnouncement": "Send the official announcement"
+  },
+  "admin": {
+    "title": "Contributions",
+    "signInTitle": "Admin sign-in",
+    "signInBody": "Only approved GitHub accounts can review contributions.",
+    "signIn": "Sign in with GitHub",
+    "signOut": "Sign out",
+    "signedInAs": "Signed in as {login}",
+    "tabs": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "empty": "Nothing here.",
+    "submitted": "Submitted {date}",
+    "decided": "{status, select, accepted {Accepted} other {Rejected}} by {login} on {date}",
+    "estimate": "Estimate: {date}",
+    "officialSource": "Official source",
+    "appliesLive": "Accepting applies this date live on the site and in the API.",
+    "recordOnly": "Accepting records the decision. The data itself has to be updated by hand.",
+    "note": "Note (optional)",
+    "accept": "Accept",
+    "reject": "Reject",
+    "revert": "Revert",
+    "done": {
+      "accepted": "Contribution accepted.",
+      "rejected": "Contribution rejected.",
+      "revert": "Acceptance reverted."
+    },
+    "errors": {
+      "forbidden": "This account is not allowed to review contributions.",
+      "oauth": "Sign-in failed. Try again.",
+      "not_configured": "Admin sign-in is not configured on this server.",
+      "store": "Contribution storage (Upstash Redis) is not configured.",
+      "already_confirmed": "This holiday is already confirmed. Revert the other confirmation first.",
+      "not_pending": "This contribution was already decided.",
+      "not_accepted": "Only accepted contributions can be reverted.",
+      "not_found": "Contribution not found.",
+      "generic": "Something went wrong. Try again."
+    }
   }
 }

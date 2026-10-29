@@ -1,8 +1,8 @@
-import { dataset } from "@3otla/data";
+import { type Confirmation, type Dataset, dataset } from "@3otla/data";
 import { type IsoDate, parseIsoDate } from "./date";
 import { gregorianToHijri, HIJRI_MONTHS, type HijriDate, hijriToGregorian } from "./hijri";
-import { createResolver } from "./resolve";
-import { createSchoolCalendars } from "./school";
+import { createResolver, type Resolver } from "./resolve";
+import { createSchoolCalendars, type SchoolCalendars } from "./school";
 import type { Labels } from "./types";
 
 export {
@@ -44,6 +44,27 @@ export const { resolveHolidays, isHoliday, nextHolidays, workdays, generateIcs }
 export const defaultSchoolCalendars = createSchoolCalendars(dataset);
 export const { schoolYears, schoolYear, isSchoolBreak, nextSchoolBreaks, generateSchoolIcs } =
   defaultSchoolCalendars;
+
+/** Every query (public holidays and school calendars) bound to one dataset. */
+export type Core = Resolver & SchoolCalendars;
+
+export function createCore(data: Dataset): Core {
+  return { ...createResolver(data), ...createSchoolCalendars(data) };
+}
+
+/** Core bound to the official dataset in @3otla/data. */
+export const defaultCore: Core = { ...defaultResolver, ...defaultSchoolCalendars };
+
+/**
+ * Adds confirmations from outside the repository (accepted by an admin) to a dataset.
+ * A confirmation already in the repository wins over an extra one for the same holiday.
+ */
+export function withConfirmations(data: Dataset, extra: readonly Confirmation[]): Dataset {
+  if (extra.length === 0) return data;
+  const known = new Set(data.confirmations.map((c) => `${c.holidayId}:${c.hijriYear}`));
+  const added = extra.filter((c) => !known.has(`${c.holidayId}:${c.hijriYear}`));
+  return { ...data, confirmations: [...data.confirmations, ...added] };
+}
 
 export interface HijriInfo extends HijriDate {
   monthName: Labels;

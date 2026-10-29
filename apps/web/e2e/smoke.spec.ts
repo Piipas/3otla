@@ -116,6 +116,16 @@ test("subscribe menu offers Google, Apple and copy", async ({ page }) => {
   await expect(page.getByRole("menuitem", { name: "Copy link" })).toBeVisible();
 });
 
+test("admin page asks visitors to sign in and is not indexed", async ({ page }) => {
+  const errors = collectErrors(page);
+  await page.goto("/en/admin");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Admin sign-in");
+  await expect(page.locator('a[href="/api/admin/login?locale=en"]')).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  await expect(page.locator('button[value="accepted"]')).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+
 test("unknown pages return 404", async ({ page }) => {
   const res = await page.goto("/fr/2027/not-a-holiday");
   expect(res?.status()).toBe(404);

@@ -1,7 +1,8 @@
 import {
+  type Core,
+  defaultCore,
   type HolidayDefinition,
   type HolidayOccurrence,
-  resolveHolidays,
   SUPPORTED_YEARS,
 } from "@3otla/core";
 import { dataset } from "@3otla/data";
@@ -13,19 +14,23 @@ export function definition(id: string): HolidayDefinition | undefined {
 }
 
 /** Occurrences of a holiday that start in `year` (two for some Hijri holidays, zero before validFrom). */
-export function occurrencesStartingIn(year: number, id: string): HolidayOccurrence[] {
-  return resolveHolidays(year).filter((o) => o.id === id && o.date.startsWith(`${year}-`));
+export function occurrencesStartingIn(
+  year: number,
+  id: string,
+  core: Core = defaultCore,
+): HolidayOccurrence[] {
+  return core.resolveHolidays(year).filter((o) => o.id === id && o.date.startsWith(`${year}-`));
 }
 
 /** Holidays that start in `year`, sorted by date. */
-export function holidaysStartingIn(year: number): HolidayOccurrence[] {
-  return resolveHolidays(year).filter((o) => o.date.startsWith(`${year}-`));
+export function holidaysStartingIn(year: number, core: Core = defaultCore): HolidayOccurrence[] {
+  return core.resolveHolidays(year).filter((o) => o.date.startsWith(`${year}-`));
 }
 
-export function yearsWithHoliday(id: string): number[] {
+export function yearsWithHoliday(id: string, core: Core = defaultCore): number[] {
   const years: number[] = [];
   for (let y = SUPPORTED_YEARS.min; y <= SUPPORTED_YEARS.max; y++) {
-    if (occurrencesStartingIn(y, id).length > 0) years.push(y);
+    if (occurrencesStartingIn(y, id, core).length > 0) years.push(y);
   }
   return years;
 }

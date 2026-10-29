@@ -14,8 +14,12 @@ export const CACHE = {
   ics: "public, max-age=3600, s-maxage=21600, stale-while-revalidate=86400",
 } as const;
 
+/** Lets admin decisions purge cached API responses from Vercel's CDN (invalidateByTag). */
+export const CDN_TAG = "live-data";
+
 export function cacheFor(c: Context, profile: keyof typeof CACHE) {
   c.header("Cache-Control", CACHE[profile]);
+  c.header("Vercel-Cache-Tag", CDN_TAG);
 }
 
 /** True when a shared cache (CDN) may store the response and serve it to other clients. */

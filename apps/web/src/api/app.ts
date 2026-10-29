@@ -1,8 +1,9 @@
+import { type Core, defaultCore } from "@3otla/core";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { etag } from "hono/etag";
+import type { ContributionStore } from "@/lib/contribution-store";
 import type { ApiContext } from "./context";
-import type { ContributionSink } from "./contributions";
 import { apiError, errorBody, handleError } from "./errors";
 import { type RateLimiter, type RateLimitOptions, rateLimit } from "./ratelimit";
 import { registerCalendarRoutes } from "./routes/calendars";
@@ -80,11 +81,13 @@ Errors always look like \`{ "error": { "code", "message", "details?", "docs" } }
 Data is [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/): use it freely, credit "3otla". Code is MIT. Spotted a mistake or an official announcement? [Contribute](${baseUrl}/en/contribute).`;
 }
 
-export interface CreateApiOptions extends Partial<ApiContext> {
+export interface CreateApiOptions extends Partial<Omit<ApiContext, "core">> {
+  /** Data provider; defaults to the repository data only. */
+  core?: () => Core | Promise<Core>;
   limiter?: RateLimiter | null;
   rateLimitOptions?: RateLimitOptions;
-  /** Where contributions go (GitHub issues). Null disables POST /v1/contributions. */
-  contributions?: ContributionSink | null;
+  /** Where contributions wait for review. Null disables POST /v1/contributions. */
+  contributions?: ContributionStore | null;
 }
 
 export function createApi(options: CreateApiOptions = {}) {
@@ -92,6 +95,7 @@ export function createApi(options: CreateApiOptions = {}) {
     now: options.now ?? (() => new Date()),
     baseUrl: (options.baseUrl ?? "http://localhost:3000").replace(/\/$/, ""),
     dataVersion: options.dataVersion ?? "dev",
+    core: async () => (options.core ? options.core() : defaultCore),
   };
 
   const app = new OpenAPIHono({

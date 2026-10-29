@@ -1,4 +1,4 @@
-import { MAX_NEXT_COUNT, nextHolidays, resolveHolidays, todayInCasablanca } from "@3otla/core";
+import { MAX_NEXT_COUNT, todayInCasablanca } from "@3otla/core";
 import { createRoute, z } from "@hono/zod-openapi";
 import { cacheFor } from "../cache";
 import { type ApiApp, type ApiContext, calendarsFor, meta, toHoliday } from "../context";
@@ -73,23 +73,21 @@ const nextRoute = createRoute({
 });
 
 export function registerHolidayRoutes(app: ApiApp, ctx: ApiContext) {
-  app.openapi(listRoute, (c) => {
+  app.openapi(listRoute, async (c) => {
     const { year, calendar, lang } = c.req.valid("query");
     const resolvedYear = year ?? Number(todayInCasablanca(ctx.now()).slice(0, 4));
-    const data = resolveHolidays(resolvedYear, calendarsFor(calendar)).map((o) =>
-      toHoliday(o, lang, ctx),
-    );
+    const data = (await ctx.core())
+      .resolveHolidays(resolvedYear, calendarsFor(calendar))
+      .map((o) => toHoliday(o, lang, ctx));
     cacheFor(c, year === undefined ? "today" : "static");
     return c.json({ data, meta: meta(ctx) }, 200);
   });
 
-  app.openapi(nextRoute, (c) => {
+  app.openapi(nextRoute, async (c) => {
     const { count, from, calendar, lang } = c.req.valid("query");
-    const data = nextHolidays(
-      from ?? todayInCasablanca(ctx.now()),
-      count,
-      calendarsFor(calendar),
-    ).map((o) => toHoliday(o, lang, ctx));
+    const data = (await ctx.core())
+      .nextHolidays(from ?? todayInCasablanca(ctx.now()), count, calendarsFor(calendar))
+      .map((o) => toHoliday(o, lang, ctx));
     cacheFor(c, from === undefined ? "today" : "static");
     return c.json({ data, meta: meta(ctx) }, 200);
   });

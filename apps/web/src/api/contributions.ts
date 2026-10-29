@@ -1,19 +1,13 @@
 /**
- * Public contributions. Git stays the database: a contribution becomes a GitHub issue,
- * maintainers accept or reject it with a label, and a workflow turns accepted
- * confirmations into a data pull request (.github/workflows/contributions.yml).
+ * Public contributions: validation shared by the API and the admin page.
  *
- * Submissions are checked before they reach GitHub: the source must be on the official
- * allowlist, and an announced religious date must be within ±2 days of the estimate.
+ * A contribution is stored as pending (src/lib/contribution-store.ts) until an admin accepts or
+ * rejects it on /admin. Accepted religious-holiday announcements apply live, on top of the
+ * repository data. Submissions are checked first: the source must be on the official
+ * allowlist, and an announced date must be within ±2 days of the Umm al-Qura estimate.
  */
-import {
-  diffDays,
-  fromHijri,
-  type IsoDate,
-  parseIsoDate,
-  startOfDayInCasablanca,
-} from "@3otla/core";
-import { religiousHolidays } from "@3otla/data";
+import { diffDays, fromHijri, parseIsoDate, startOfDayInCasablanca } from "@3otla/core";
+import { type Confirmation, religiousHolidays } from "@3otla/data";
 import { checkSourceUrl } from "@3otla/data/sources";
 import { z } from "@hono/zod-openapi";
 
@@ -72,17 +66,8 @@ export const ContributionSchema = z.discriminatedUnion("kind", [
 
 export type Contribution = z.infer<typeof ContributionSchema>;
 
-/** A confirmation as it will be written to packages/data/confirmations.json. */
-export interface ConfirmationEntry {
-  holidayId: string;
-  hijriYear: number;
-  date: IsoDate;
-  announcedAt: string;
-  sourceUrl: string;
-}
-
 export type CheckResult =
-  | { ok: true; confirmation?: ConfirmationEntry }
+  | { ok: true; confirmation?: Confirmation }
   | { ok: false; code: "invalid_source" | "implausible_date"; message: string };
 
 /** "2027-03-08T20:30" in Morocco → "2027-03-08T20:30:00+01:00". */
@@ -126,107 +111,6 @@ export function checkContribution(c: Contribution): CheckResult {
       date: c.date,
       announcedAt: moroccoOffsetIso(c.announcedAt),
       sourceUrl: c.sourceUrl,
-    },
-  };
-}
-
-export interface IssueDraft {
-  title: string;
-  body: string;
-  labels: string[];
-}
-
-/** Marker the moderation workflow looks for. */
-export const PAYLOAD_MARKER = "3otla-contribution";
-
-/** Free text goes in a fenced block: no mentions, links or issue references are triggered. */
-const fenced = (value: string) => `~~~text\n${value.replaceAll("~~~", "~ ~ ~")}\n~~~`;
-
-export function issueFor(c: Contribution, check: Extract<CheckResult, { ok: true }>): IssueDraft {
-  const rows: [string, string][] = [];
-  let title: string;
-  switch (c.kind) {
-    case "confirmation":
-      title = `Confirmation: ${c.holidayId} ${c.hijriYear} on ${c.date}`;
-      rows.push(
-        ["Holiday", `\`${c.holidayId}\``],
-        ["Hijri year", String(c.hijriYear)],
-        ["Announced date", c.date],
-        ["Announced at", check.confirmation?.announcedAt ?? c.announcedAt],
-      );
-      break;
-    case "correction":
-      title = `Correction: ${c.subject.replace(/\s+/g, " ").slice(0, 80)}`;
-      if (c.proposedDate) rows.push(["Proposed date", c.proposedDate]);
-      break;
-    case "school-calendar":
-      title = `School calendar ${c.schoolYear}`;
-      rows.push(["School year", c.schoolYear]);
-      break;
-  }
-  rows.push(["Source", `<${c.sourceUrl}> (official allowlist ✓)`]);
-
-  const payload = {
-    version: 1,
-    ...c,
-    website: undefined,
-    ...(check.confirmation ? { confirmation: check.confirmation } : {}),
-  };
-  const body = [
-    `**Kind:** \`${c.kind}\``,
-    "",
-    "| Field | Value |",
-    "| --- | --- |",
-    ...rows.map(([k, v]) => `| ${k} | ${v.replaceAll("|", "\\|")} |`),
-    "",
-    ...(c.kind === "correction" ? ["**Subject**", fenced(c.subject), ""] : []),
-    ...(c.details ? ["**Details**", fenced(c.details), ""] : []),
-    ...(c.contact ? ["**Submitted by**", fenced(c.contact), ""] : []),
-    "---",
-    "Maintainers: check the source, then add the `accepted` label to apply this contribution, or `rejected` to decline it.",
-    c.kind === "confirmation"
-      ? "Accepting opens a pull request that adds the confirmation to `packages/data/confirmations.json`."
-      : "Accepting marks it for a manual data change (see CONTRIBUTING.md).",
-    "",
-    // JSON escapes "<" so the payload can never close the HTML comment early.
-    `<!-- ${PAYLOAD_MARKER}\n${JSON.stringify(payload, null, 2).replaceAll("<", "\\u003c").replaceAll(">", "\\u003e")}\n-->`,
-  ].join("\n");
-
-  return { title, body, labels: ["contribution", `kind:${c.kind}`] };
-}
-
-/** Where accepted contributions land. Injected so tests never call GitHub. */
-export interface ContributionSink {
-  create(issue: IssueDraft): Promise<{ number: number; url: string }>;
-}
-
-type Env = Record<string, string | undefined>;
-
-/** GitHub issues sink, or null when no token is configured (contributions disabled). */
-export function githubSinkFromEnv(
-  env: Env,
-  fetchImpl: typeof fetch = fetch,
-): ContributionSink | null {
-  const token = env.GITHUB_CONTRIBUTIONS_TOKEN;
-  const repo = env.GITHUB_CONTRIBUTIONS_REPO || "Piipas/3otla";
-  if (!token) return null;
-  return {
-    async create(issue) {
-      const res = await fetchImpl(`https://api.github.com/repos/${repo}/issues`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/vnd.github+json",
-          "X-GitHub-Api-Version": "2022-11-28",
-          "Content-Type": "application/json",
-          "User-Agent": "3otla-contributions",
-        },
-        body: JSON.stringify(issue),
-        signal: AbortSignal.timeout(8000),
-      });
-      if (!res.ok) throw new Error(`GitHub issue creation failed: ${res.status}`);
-      const json = (await res.json()) as { number: number; html_url: string };
-      return { number: json.number, url: json.html_url };
     },
   };
 }
