@@ -4,8 +4,8 @@ import { cacheFor } from "../cache";
 import { type ApiApp, type ApiContext, calendarsFor, meta, toHoliday } from "../context";
 import {
   CalendarParamSchema,
-  ErrorSchema,
   envelope,
+  errorResponses,
   HijriDateSchema,
   HolidaySchema,
   IsoDateParam,
@@ -13,21 +13,16 @@ import {
   LocaleSchema,
 } from "../schemas";
 
-const errors = {
-  400: {
-    description: "Invalid parameters",
-    content: { "application/json": { schema: ErrorSchema } },
-  },
-  429: { description: "Rate limited", content: { "application/json": { schema: ErrorSchema } } },
-};
-
 const isHolidayRoute = createRoute({
   method: "get",
   path: "/v1/is-holiday/{date}",
+  operationId: "isHoliday",
   tags: ["Dates"],
   summary: "Is this date a holiday?",
+  description:
+    "Whether a date is a public holiday in Morocco, with the matching holidays. `isWeekend` is true on Saturday and Sunday. School breaks are not public holidays and are never counted here.",
   request: {
-    params: z.object({ date: IsoDateParam }),
+    params: z.object({ date: IsoDateParam.openapi({ example: "2026-11-18" }) }),
     query: z.object({ calendar: CalendarParamSchema, lang: LocaleSchema.optional() }),
   },
   responses: {
@@ -46,21 +41,22 @@ const isHolidayRoute = createRoute({
         },
       },
     },
-    ...errors,
+    ...errorResponses,
   },
 });
 
 const workdaysRoute = createRoute({
   method: "get",
   path: "/v1/workdays",
+  operationId: "countWorkdays",
   tags: ["Dates"],
   summary: "Working days between two dates",
   description:
-    "Inclusive range. Weekend is Saturday and Sunday; holidays falling on weekdays are excluded.",
+    "Counts working days in an inclusive range of up to 10 years. The weekend is Saturday and Sunday; public holidays on weekdays are not working days. Religious holidays count with their current date (estimated or confirmed).",
   request: {
     query: z.object({
-      from: IsoDateParam,
-      to: IsoDateParam.openapi({ example: "2026-11-30" }),
+      from: IsoDateParam.openapi({ description: "First day (inclusive).", example: "2026-11-01" }),
+      to: IsoDateParam.openapi({ description: "Last day (inclusive).", example: "2026-11-30" }),
       calendar: CalendarParamSchema,
       lang: LocaleSchema.optional(),
     }),
@@ -86,18 +82,19 @@ const workdaysRoute = createRoute({
         },
       },
     },
-    ...errors,
+    ...errorResponses,
   },
 });
 
 const hijriRoute = createRoute({
   method: "get",
   path: "/v1/hijri/{date}",
+  operationId: "toHijri",
   tags: ["Dates"],
   summary: "Hijri date (Umm al-Qura)",
   description:
     "Converts a Gregorian date with the Umm al-Qura calendar. Always an estimate for Morocco, which follows local moon sighting.",
-  request: { params: z.object({ date: IsoDateParam }) },
+  request: { params: z.object({ date: IsoDateParam.openapi({ example: "2027-03-09" }) }) },
   responses: {
     200: {
       description: "Hijri date",
@@ -114,7 +111,7 @@ const hijriRoute = createRoute({
         },
       },
     },
-    ...errors,
+    ...errorResponses,
   },
 });
 

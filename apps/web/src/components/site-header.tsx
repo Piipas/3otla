@@ -55,16 +55,28 @@ export function SiteHeader() {
         aria-label="Main"
         className="flex items-center gap-1 overflow-x-auto px-3 pb-2 text-sm sm:hidden"
       >
-        <Link href={`/${currentYear()}`} className="rounded-full px-3 py-1.5 text-muted">
+        <Link
+          href={`/${currentYear()}`}
+          className="inline-flex min-h-10 shrink-0 items-center rounded-full px-3 text-muted"
+        >
           {t("nav.calendar")}
         </Link>
-        <Link href="/school" className="rounded-full px-3 py-1.5 text-muted">
+        <Link
+          href="/school"
+          className="inline-flex min-h-10 shrink-0 items-center rounded-full px-3 text-muted"
+        >
           {t("nav.school")}
         </Link>
-        <Link href="/sources" className="rounded-full px-3 py-1.5 text-muted">
+        <Link
+          href="/sources"
+          className="inline-flex min-h-10 shrink-0 items-center rounded-full px-3 text-muted"
+        >
           {t("nav.sources")}
         </Link>
-        <a href="/docs" className="rounded-full px-3 py-1.5 text-muted">
+        <a
+          href="/docs"
+          className="inline-flex min-h-10 shrink-0 items-center rounded-full px-3 text-muted"
+        >
           {t("nav.api")}
         </a>
       </nav>

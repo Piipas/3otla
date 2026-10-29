@@ -134,6 +134,7 @@ describe("helpers", () => {
     ).toEqual({
       api: { perMinute: 10, perDay: 2000 },
       ics: { perMinute: 120, perDay: 20000 },
+      contribute: { perMinute: 3, perDay: 10 },
     });
   });
 });

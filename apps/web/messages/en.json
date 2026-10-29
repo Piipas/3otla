@@ -15,7 +15,8 @@
     "sources": "Sources",
     "api": "API",
     "skip": "Skip to content",
-    "school": "School holidays"
+    "school": "School holidays",
+    "contribute": "Contribute"
   },
   "home": {
     "kicker": "Next public holiday",
@@ -45,8 +46,7 @@
     "national": "National holidays",
     "religious": "Religious holidays",
     "all": "All public holidays",
-    "school-public": "School holidays (public)",
-    "school-aefe": "School holidays (AEFE)"
+    "school-public": "School holidays (public)"
   },
   "holiday": {
     "days": "{count, plural, one {# day} other {# days}}",
@@ -115,20 +115,91 @@
   },
   "school": {
     "title": "School holidays {schoolYear}",
-    "metaDescription": "Official {schoolYear} school holiday calendar in Morocco: public schools (Ministry of National Education) and French schools (AEFE), with official sources.",
-    "intro": "Morocco’s official school holidays, from the calendars published by the Ministry of National Education and, for French schools, by the French Embassy.",
+    "metaDescription": "Official {schoolYear} school holiday calendar in Morocco, from the Ministry of National Education decision, with the official source and a countdown.",
+    "intro": "Morocco’s official school holidays, from the decision published by the Ministry of National Education.",
     "notHolidays": "School breaks are not public holidays: they don’t change working days. Public holidays come on top of them.",
     "publicHolidays": "See public holidays",
-    "public": "Public schools",
-    "publicSub": "Ministry of National Education, Preschool and Sports",
-    "aefe": "French schools (AEFE)",
-    "aefeSub": "French Embassy in Morocco",
     "next": "Next break",
     "inProgress": "Ongoing until {date}",
     "classesStart": "First day of classes",
     "classesEnd": "Last day of classes",
-    "breaks": "All breaks",
     "source": "Official text",
-    "over": "All breaks of this school year are over."
+    "over": "All breaks of this school year are over.",
+    "daysOff": "Every day without classes",
+    "kindBreak": "Break",
+    "kindHoliday": "Public holiday",
+    "summary": "{breaks} breaks and {holidays} public holidays",
+    "decision": "Ministerial decision no. {ref}",
+    "issued": "Published on {date}",
+    "keyDates": "Key dates"
+  },
+  "contribute": {
+    "title": "Contribute",
+    "metaDescription": "Report a mistake or send an official announcement (Eid, school calendar). Every contribution is reviewed before it is published.",
+    "intro": "Spotted a wrong date, or an official announcement just came out? Send it here. Every contribution is reviewed by a maintainer before it is published.",
+    "howTitle": "How it works",
+    "step1": "You send the form with a link to an official source.",
+    "step2": "Your contribution becomes a public request on GitHub, reviewed by a maintainer.",
+    "step3": "If accepted, the data is updated on the next deploy. If rejected, the request is closed with an explanation.",
+    "kindLabel": "Type of contribution",
+    "kinds": {
+      "confirmation": {
+        "title": "Religious holiday announcement",
+        "desc": "The Ministry of Habous announced the date of Eid, Mawlid or the Islamic New Year."
+      },
+      "correction": {
+        "title": "Fix a mistake",
+        "desc": "A date, name or source is wrong on the site or in the API."
+      },
+      "school-calendar": {
+        "title": "New school calendar",
+        "desc": "The Ministry of National Education published the calendar for a new school year."
+      }
+    },
+    "fields": {
+      "holiday": "Holiday",
+      "hijriYear": "Hijri year",
+      "date": "Announced first day",
+      "announcedAt": "Date and time of the announcement (Morocco time)",
+      "subject": "What is wrong?",
+      "subjectHint": "For example “Eid al-Adha 2027” or the page address.",
+      "proposedDate": "Correct date",
+      "details": "Details",
+      "detailsHint": "Explain the mistake and what the official source says.",
+      "schoolYear": "School year",
+      "schoolYearHint": "For example 2027-2028.",
+      "sourceUrl": "Link to the official source",
+      "sourceHint": "maroc.ma, a .gov.ma site (habous.gov.ma, men.gov.ma) or MAP. Aggregators and news sites are not accepted.",
+      "contact": "Your name or GitHub username",
+      "optional": "optional"
+    },
+    "publicNotice": "Your contribution will be published on GitHub. Don’t include any personal information.",
+    "submit": "Send contribution",
+    "submitting": "Sending…",
+    "errors": {
+      "summary": "Fix these fields before sending:",
+      "required": "This field is required.",
+      "url": "Enter a full address starting with https://",
+      "source": "Source not accepted: use maroc.ma, a .gov.ma site or MAP.",
+      "tooShort": "Add at least 20 characters.",
+      "schoolYear": "Expected format: 2027-2028.",
+      "implausible": "This date is more than 2 days from the estimate. Please check the announcement.",
+      "rateLimited": "Too many submissions. Try again in a few minutes.",
+      "generic": "Sending failed. Try again later."
+    },
+    "success": {
+      "title": "Thank you, it’s sent!",
+      "body": "Your contribution #{number} is waiting for a maintainer’s review. You can follow it on GitHub.",
+      "link": "Follow on GitHub",
+      "another": "Send another contribution"
+    },
+    "disabled": {
+      "title": "Direct sending unavailable",
+      "body": "Continue on GitHub: the request is pre-filled with your answers (a GitHub account is needed).",
+      "link": "Continue on GitHub"
+    },
+    "cta": "Contribute",
+    "suggestFix": "Report a mistake",
+    "sendAnnouncement": "Send the official announcement"
   }
 }

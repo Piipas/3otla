@@ -9,25 +9,18 @@ import {
 } from "@3otla/core";
 import { createRoute, z } from "@hono/zod-openapi";
 import { cacheFor } from "../cache";
-import { type ApiApp, type ApiContext, meta } from "../context";
+import { type ApiApp, type ApiContext, meta, toHoliday } from "../context";
 import {
-  ErrorSchema,
   envelope,
+  errorResponses,
   IsoDateParam,
   LocaleSchema,
+  notFoundSchoolYear,
   type SchoolBreakDto,
   SchoolBreakSchema,
   SchoolCalendarParamSchema,
   SchoolYearSchema,
 } from "../schemas";
-
-const errors = {
-  400: {
-    description: "Invalid parameters",
-    content: { "application/json": { schema: ErrorSchema } },
-  },
-  429: { description: "Rate limited", content: { "application/json": { schema: ErrorSchema } } },
-};
 
 const named = (labels: Labels, lang: Locale | undefined) =>
   lang ? { name: labels[lang] } : { labels };
@@ -54,10 +47,11 @@ function toBreak(b: SchoolBreak, lang: Locale | undefined): SchoolBreakDto {
 const yearRoute = createRoute({
   method: "get",
   path: "/v1/school/{calendar}",
+  operationId: "getSchoolYear",
   tags: ["School"],
   summary: "School calendar for a school year",
   description:
-    "Start and end of classes and every break, from the official calendar (Ministry of National Education decision, or the French Embassy calendar for AEFE schools). School breaks are not public holidays and do not affect `/is-holiday` or `/workdays`.",
+    "Start and end of classes and every break, from the official calendar (Ministry of National Education decision). School breaks are not public holidays and do not affect `/is-holiday` or `/workdays`.",
   request: {
     params: z.object({ calendar: SchoolCalendarParamSchema }),
     query: z.object({
@@ -74,26 +68,33 @@ const yearRoute = createRoute({
       description: "School year",
       content: { "application/json": { schema: envelope(SchoolYearSchema) } },
     },
-    404: {
-      description: "School year not published",
-      content: { "application/json": { schema: ErrorSchema } },
-    },
-    ...errors,
+    ...notFoundSchoolYear,
+    ...errorResponses,
   },
 });
 
 const nextRoute = createRoute({
   method: "get",
   path: "/v1/school/{calendar}/next",
+  operationId: "nextSchoolBreaks",
   tags: ["School"],
   summary: "Upcoming school breaks",
   description:
-    "The next breaks from today in Morocco (or `from`). A break in progress is included.",
+    "The next school breaks from today in Morocco (or from `from`). A break in progress is included. Public holidays during the school year are listed by `GET /v1/school/{calendar}` in `publicHolidays`.",
   request: {
     params: z.object({ calendar: SchoolCalendarParamSchema }),
     query: z.object({
-      count: z.coerce.number().int().min(1).max(MAX_NEXT_COUNT).default(3),
-      from: IsoDateParam.optional().openapi({ description: "Defaults to today in Morocco." }),
+      count: z.coerce
+        .number()
+        .int()
+        .min(1)
+        .max(MAX_NEXT_COUNT)
+        .default(3)
+        .openapi({ description: `How many breaks, 1–${MAX_NEXT_COUNT}.`, example: 2 }),
+      from: IsoDateParam.optional().openapi({
+        description: "Start date. Defaults to today in Morocco.",
+        example: "2027-03-01",
+      }),
       lang: LocaleSchema.optional(),
     }),
   },
@@ -102,7 +103,7 @@ const nextRoute = createRoute({
       description: "Upcoming breaks",
       content: { "application/json": { schema: envelope(z.array(SchoolBreakSchema)) } },
     },
-    ...errors,
+    ...errorResponses,
   },
 });
 
@@ -127,6 +128,7 @@ export function registerSchoolRoutes(app: ApiApp, ctx: ApiContext) {
             date: e.date,
           })),
           breaks: year.breaks.map((b) => toBreak(b, lang)),
+          publicHolidays: year.publicHolidays.map((o) => toHoliday(o, lang, ctx)),
         },
         meta: meta(ctx),
       },

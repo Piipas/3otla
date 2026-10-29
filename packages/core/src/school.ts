@@ -1,5 +1,5 @@
 /**
- * School calendars (public schools, French AEFE schools).
+ * School calendars (Ministry of National Education, public schools).
  *
  * School breaks are NOT public holidays: they never affect isHoliday() or workdays().
  * Most breaks are fixed date ranges from the official decision. Breaks tied to a religious
@@ -18,8 +18,14 @@ import { addDays, diffDays, type IsoDate, parseIsoDate, todayInCasablanca } from
 import { HolidayError } from "./errors";
 import { hijriToGregorian } from "./hijri";
 import { buildIcs, type IcsBuildOptions } from "./ics";
-import { MAX_NEXT_COUNT } from "./resolve";
-import { type DateSource, SCHOOL_CALENDARS, type SchoolCalendarId, type Status } from "./types";
+import { createResolver, MAX_NEXT_COUNT, SUPPORTED_YEARS } from "./resolve";
+import {
+  type DateSource,
+  type HolidayOccurrence,
+  SCHOOL_CALENDARS,
+  type SchoolCalendarId,
+  type Status,
+} from "./types";
 
 export interface SchoolBreak {
   /** "school-public:2026-2027:mid-year-break" — stable across date confirmations. */
@@ -57,6 +63,12 @@ export interface SchoolYear {
   classesEnd: IsoDate;
   classesEndExceptions: readonly { labels: Labels; date: IsoDate }[];
   breaks: SchoolBreak[];
+  /**
+   * Public holidays between the first and last day of classes, except those that fall
+   * entirely inside a break (e.g. Eid inside the Eid break). Together with `breaks`, this
+   * is the full list of days off in the official calendar.
+   */
+  publicHolidays: HolidayOccurrence[];
 }
 
 export interface IsSchoolBreakResult {
@@ -89,6 +101,7 @@ export function createSchoolCalendars(dataset: Dataset): SchoolCalendars {
     dataset.confirmations.map((c) => [`${c.holidayId}:${c.hijriYear}`, c]),
   );
   const holidays = new Map(dataset.holidays.map((h) => [h.id, h]));
+  const resolver = createResolver(dataset);
   const cache = new Map<string, SchoolYear>();
 
   function assertCalendar(calendar: string): asserts calendar is SchoolCalendarId {
@@ -171,6 +184,22 @@ export function createSchoolCalendars(dataset: Dataset): SchoolCalendars {
       .map((b) => resolveBreak(file, b))
       .filter((b): b is SchoolBreak => b !== null)
       .sort((a, b) => a.date.localeCompare(b.date));
+    const first = Number(file.classesStart.slice(0, 4));
+    const last = Number(file.classesEnd.slice(0, 4));
+    const publicHolidays: HolidayOccurrence[] = [];
+    for (
+      let y = Math.max(first, SUPPORTED_YEARS.min);
+      y <= Math.min(last, SUPPORTED_YEARS.max);
+      y++
+    ) {
+      for (const h of resolver.resolveHolidays(y)) {
+        const inYear = h.endDate >= file.classesStart && h.date <= file.classesEnd;
+        const inBreak = breaks.some((b) => b.date <= h.date && b.endDate >= h.endDate);
+        if (inYear && !inBreak && !publicHolidays.some((p) => p.key === h.key)) {
+          publicHolidays.push(h);
+        }
+      }
+    }
     const year: SchoolYear = {
       calendar: file.calendar,
       schoolYear: file.schoolYear,
@@ -181,6 +210,7 @@ export function createSchoolCalendars(dataset: Dataset): SchoolCalendars {
       classesEnd: file.classesEnd,
       classesEndExceptions: file.classesEndExceptions ?? [],
       breaks,
+      publicHolidays,
     };
     cache.set(key, year);
     return year;

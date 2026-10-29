@@ -1,11 +1,20 @@
 import { dataset } from "@3otla/data";
-import { BadgeCheck, CalendarCheck, ExternalLink, MoonStar } from "lucide-react";
+import {
+  BadgeCheck,
+  CalendarCheck,
+  ExternalLink,
+  MessageSquareWarning,
+  MoonStar,
+} from "lucide-react";
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FadeIn } from "@/components/motion";
+import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
 import { alternates, REPO_URL } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 type Params = Promise<{ locale: AppLocale }>;
 
@@ -102,6 +111,10 @@ export default async function SourcesPage({ params }: { params: Params }) {
             </a>
           ) : null}
         </p>
+        <Link href="/contribute" className={cn(buttonVariants(), "mt-4")}>
+          <MessageSquareWarning aria-hidden="true" />
+          {t("contribute.cta")}
+        </Link>
       </section>
 
       <section className="mt-10">

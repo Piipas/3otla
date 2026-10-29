@@ -57,16 +57,19 @@ describe("public schools 2026-2027 (MEN decision 047.26)", () => {
   });
 });
 
-describe("French schools (AEFE) 2026-2027", () => {
-  it("turns 'after classes … in the morning' into inclusive days off", () => {
-    const year = schoolYear("school-aefe", "2026-2027");
-    expect(year.classesStart).toBe("2026-09-02");
-    expect(year.classesEnd).toBe("2027-07-02");
-    expect(year.breaks.map((b) => [b.id, b.date, b.endDate, b.durationDays])).toEqual([
-      ["autumn-break", "2026-10-18", "2026-11-01", 15],
-      ["christmas-break", "2026-12-20", "2027-01-03", 15],
-      ["winter-break", "2027-02-21", "2027-03-07", 15],
-      ["spring-break", "2027-04-25", "2027-05-09", 15],
+describe("days off in the official annex", () => {
+  it("lists the public holidays during the school year, minus those inside a break", () => {
+    const year = schoolYear("school-public", "2026-2027");
+    // MEN decision 047.26, Annex 1: 8 public holidays besides the 7 breaks.
+    expect(year.publicHolidays.map((h) => [h.id, h.date])).toEqual([
+      ["unity-day", "2026-10-31"],
+      ["green-march", "2026-11-06"],
+      ["independence-day", "2026-11-18"],
+      ["new-year", "2027-01-01"],
+      ["independence-manifesto", "2027-01-11"],
+      ["amazigh-new-year", "2027-01-14"],
+      ["labour-day", "2027-05-01"],
+      ["islamic-new-year", "2027-06-06"], // Umm al-Qura estimate of 1 Muharram 1449,
     ]);
   });
 });
@@ -80,7 +83,7 @@ describe("queries", () => {
   });
 
   it("knows whether a date is in a break, per calendar", () => {
-    expect(isSchoolBreak("2026-10-29", "school-aefe").inBreak).toBe(true);
+    expect(isSchoolBreak("2026-10-20", "school-public").inBreak).toBe(true);
     expect(isSchoolBreak("2026-10-29", "school-public").inBreak).toBe(false);
     expect(isSchoolBreak("2026-12-06", "school-public").breaks[0]?.id).toBe("second-term-break");
   });
@@ -90,7 +93,7 @@ describe("queries", () => {
       "second-term-break",
       "mid-year-break",
     ]);
-    expect(nextSchoolBreaks("2026-10-29", "school-aefe", 1)[0]?.id).toBe("autumn-break");
+    expect(nextSchoolBreaks("2026-10-20", "school-public", 1)[0]?.id).toBe("first-term-break");
   });
 
   it("never changes public holidays or workdays", () => {

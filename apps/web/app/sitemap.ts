@@ -24,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...entry("", 1, "daily"),
     ...entry("/school", 0.9, "weekly"),
     ...entry("/sources", 0.3, "monthly"),
+    ...entry("/contribute", 0.3, "monthly"),
   ];
   for (let year = SUPPORTED_YEARS.min; year <= SUPPORTED_YEARS.max; year++) {
     const near = Math.abs(year - now) <= 1;

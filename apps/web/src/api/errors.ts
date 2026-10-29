@@ -9,6 +9,10 @@ export type ApiErrorCode =
   | "invalid_request"
   | "not_found"
   | "rate_limited"
+  | "invalid_source"
+  | "implausible_date"
+  | "contributions_disabled"
+  | "upstream_error"
   | "internal";
 
 export function errorBody(code: ApiErrorCode, message: string, details?: unknown) {

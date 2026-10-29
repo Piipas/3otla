@@ -18,18 +18,22 @@
   --brand: #2f3fce; /* Majorelle */
   --brand-ink: #fffaf1;
   --brand-deep: #1b2486;
-  --accent: #c4502f; /* terracotta */
+  --accent: #a8432a; /* terracotta */
   --accent-ink: #fffaf1;
 
   --fixed: #3b3a36;
   --fixed-soft: #e4ddd0;
-  --estimated: #a86d0b;
+  --estimated: #87580a;
   --estimated-soft: #f7e3b8;
   --confirmed: #11704f;
   --confirmed-soft: #cdebdc;
 
   --weekend: #e6dccb;
   --ring: #2f3fce;
+
+  /* Hero panels carry white text, so both stops stay dark enough in both themes. */
+  --hero-from: #2f3fce;
+  --hero-to: #1b2486;
 }
 
 .dark {
@@ -55,6 +59,9 @@
 
   --weekend: #181e36;
   --ring: #8d98ff;
+
+  --hero-from: #3b46c9;
+  --hero-to: #2a338f;
 }
 
 @theme inline {
@@ -77,6 +84,8 @@
   --color-confirmed-soft: var(--confirmed-soft);
   --color-weekend: var(--weekend);
   --color-ring: var(--ring);
+  --color-hero-from: var(--hero-from);
+  --color-hero-to: var(--hero-to);
 
   --font-sans: var(--font-readex), ui-sans-serif, system-ui, sans-serif;
 
@@ -98,6 +107,12 @@
   body {
     @apply bg-bg text-ink font-sans antialiased;
     font-feature-settings: "tnum" 1;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label[for] {
+    cursor: pointer;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;

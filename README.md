@@ -35,9 +35,9 @@ curl "https://3otla.vercel.app/api/v1/hijri/2027-05-16"
 # Subscribable calendar feed (Google Calendar, Apple Calendar, Outlook)
 curl "https://3otla.vercel.app/api/v1/calendars/national.ics"
 
-# School holidays: public schools (Ministry of Education) or French schools (AEFE)
+# School holidays (Ministry of National Education)
 curl "https://3otla.vercel.app/api/v1/school/school-public?lang=fr"
-curl "https://3otla.vercel.app/api/v1/school/school-aefe/next?count=2"
+curl "https://3otla.vercel.app/api/v1/school/school-public/next?count=2"
 curl "https://3otla.vercel.app/api/v1/calendars/school-public.ics"
 ```
 

@@ -9,9 +9,6 @@ export const OFFICIAL_HOSTS = [
   "gov.ma", // Ministries: habous.gov.ma, men.gov.ma, sgg.gov.ma, ...
   "mapexpress.ma", // Agence Maghreb Arabe Presse (official announcements)
   "map.ma",
-  // Enseignement français au Maroc: official site of the AEFE network in Morocco, which
-  // publishes the school calendar signed by the French Embassy's cooperation service.
-  "efmaroc.org",
 ] as const;
 
 /** Known aggregators and secondary sources, listed so a PR adding one fails loudly. */

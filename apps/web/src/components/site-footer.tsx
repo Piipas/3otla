@@ -12,19 +12,34 @@ export function SiteFooter() {
           <StarMark className="size-5 text-accent" />
           <span>{t("footer.tagline")}</span>
         </div>
-        <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2">
-          <Link href="/sources" className="hover:text-ink">
+        <nav aria-label="Footer" className="-mx-2 flex flex-wrap items-center gap-x-1 gap-y-1">
+          <Link
+            href="/sources"
+            className="inline-flex min-h-11 items-center rounded-md px-2 hover:text-ink"
+          >
             {t("nav.sources")}
           </Link>
-          <a href="/docs" className="hover:text-ink">
+          <Link
+            href="/contribute"
+            className="inline-flex min-h-11 items-center rounded-md px-2 hover:text-ink"
+          >
+            {t("nav.contribute")}
+          </Link>
+          <a
+            href="/docs"
+            className="inline-flex min-h-11 items-center rounded-md px-2 hover:text-ink"
+          >
             {t("footer.api")}
           </a>
           {REPO_URL ? (
-            <a href={REPO_URL} className="hover:text-ink">
+            <a
+              href={REPO_URL}
+              className="inline-flex min-h-11 items-center rounded-md px-2 hover:text-ink"
+            >
               GitHub
             </a>
           ) : null}
-          <span>{t("footer.data")}</span>
+          <span className="px-2">{t("footer.data")}</span>
         </nav>
       </div>
     </footer>

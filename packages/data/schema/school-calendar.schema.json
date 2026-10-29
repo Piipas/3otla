@@ -16,7 +16,7 @@
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
-    "calendar": { "enum": ["school-public", "school-aefe"] },
+    "calendar": { "enum": ["school-public"] },
     "schoolYear": { "type": "string", "pattern": "^\\d{4}-\\d{4}$" },
     "sourceUrl": { "$ref": "#/$defs/httpsUrl" },
     "decisionRefs": { "type": "array", "items": { "$ref": "#/$defs/decisionRef" } },
@@ -69,7 +69,7 @@
       "properties": {
         "ref": { "type": "string", "minLength": 1 },
         "kind": {
-          "enum": ["decree", "royal-decision", "ministerial-decision", "embassy-calendar"]
+          "enum": ["decree", "royal-decision", "ministerial-decision"]
         },
         "scope": { "enum": ["all", "public-sector", "private-sector"] },
         "url": { "$ref": "#/$defs/httpsUrl" }

@@ -32,17 +32,23 @@ describe("GET /v1/school/{calendar}", () => {
     expect(data.breaks).toHaveLength(7);
     const fitr = data.breaks.find((b: { id: string }) => b.id === "eid-al-fitr-break");
     expect(fitr).toMatchObject({ name: "Vacances de l’Aïd al-Fitr", status: "estimated" });
+    expect(data.publicHolidays).toHaveLength(8);
+    expect(data.publicHolidays[0]).toMatchObject({ id: "unity-day", date: "2026-10-31" });
   });
 
   it("returns a specific year with all labels and a long cache", async () => {
-    const res = await get("/v1/school/school-aefe?schoolYear=2026-2027");
+    const res = await get("/v1/school/school-public?schoolYear=2026-2027");
     expect(res.headers.get("Cache-Control")).toContain("s-maxage=86400");
     const { data } = await json(res);
     expect(data.breaks[0]).toMatchObject({
-      id: "autumn-break",
-      labels: { ar: "عطلة الخريف", fr: "Vacances d’automne", en: "Autumn break" },
+      id: "first-term-break",
+      labels: {
+        ar: "الفترة البينية الأولى",
+        fr: "Vacances intermédiaires (1ʳᵉ période)",
+        en: "First term break",
+      },
       date: "2026-10-18",
-      endDate: "2026-11-01",
+      endDate: "2026-10-25",
     });
   });
 
@@ -66,18 +72,25 @@ describe("GET /v1/school/{calendar}/next", () => {
   });
 
   it("includes a break in progress", async () => {
-    const { data } = await json(await get("/v1/school/school-aefe/next?count=1"));
-    expect(data[0].id).toBe("autumn-break");
+    const api = createApi({
+      baseUrl: "https://3otla.example",
+      dataVersion: "test",
+      now: () => new Date("2026-10-20T10:00:00Z"),
+    });
+    const res = await api.request("/api/v1/school/school-public/next?count=1");
+    expect((await json(res)).data[0].id).toBe("first-term-break");
   });
 });
 
 describe("school .ics feeds", () => {
-  it("serves both school feeds", async () => {
-    for (const file of ["school-public.ics", "school-aefe.ics"]) {
-      const res = await get(`/v1/calendars/${file}?lang=ar`);
-      expect(res.status, file).toBe(200);
-      expect(res.headers.get("Content-Type")).toBe("text/calendar; charset=utf-8");
-      expect(await res.text()).toContain("BEGIN:VEVENT");
-    }
+  it("serves the public school feed", async () => {
+    const res = await get("/v1/calendars/school-public.ics?lang=ar");
+    expect(res.status).toBe(200);
+    expect(res.headers.get("Content-Type")).toBe("text/calendar; charset=utf-8");
+    expect((await res.text()).match(/BEGIN:VEVENT/g)).toHaveLength(7);
+  });
+
+  it("no longer serves the French schools feed", async () => {
+    expect((await get("/v1/calendars/school-aefe.ics")).status).toBe(400);
   });
 });

@@ -15,7 +15,8 @@
     "sources": "Sources",
     "api": "API",
     "skip": "Aller au contenu",
-    "school": "Vacances scolaires"
+    "school": "Vacances scolaires",
+    "contribute": "Contribuer"
   },
   "home": {
     "kicker": "Prochain jour férié",
@@ -45,8 +46,7 @@
     "national": "Fêtes nationales",
     "religious": "Fêtes religieuses",
     "all": "Tous les jours fériés",
-    "school-public": "Vacances scolaires (public)",
-    "school-aefe": "Vacances scolaires (AEFE)"
+    "school-public": "Vacances scolaires (public)"
   },
   "holiday": {
     "days": "{count, plural, one {# jour} other {# jours}}",
@@ -115,20 +115,91 @@
   },
   "school": {
     "title": "Vacances scolaires {schoolYear}",
-    "metaDescription": "Calendrier officiel des vacances scolaires {schoolYear} au Maroc : enseignement public (ministère de l’Éducation nationale) et établissements français (AEFE), avec sources officielles.",
-    "intro": "Les vacances scolaires officielles au Maroc, d’après les calendriers publiés par le ministère de l’Éducation nationale et, pour les établissements français, par l’Ambassade de France.",
+    "metaDescription": "Calendrier officiel des vacances scolaires {schoolYear} au Maroc, d’après la décision du ministère de l’Éducation nationale, avec la source officielle et un compte à rebours.",
+    "intro": "Les vacances scolaires officielles au Maroc, d’après la décision publiée par le ministère de l’Éducation nationale.",
     "notHolidays": "Les vacances scolaires ne sont pas des jours fériés : elles ne changent pas les jours ouvrables. Les jours fériés s’y ajoutent.",
     "publicHolidays": "Voir les jours fériés",
-    "public": "Enseignement public",
-    "publicSub": "Ministère de l’Éducation nationale, du Préscolaire et des Sports",
-    "aefe": "Établissements français (AEFE)",
-    "aefeSub": "Ambassade de France au Maroc",
     "next": "Prochaines vacances",
     "inProgress": "En cours jusqu’au {date}",
     "classesStart": "Rentrée",
     "classesEnd": "Fin des cours",
-    "breaks": "Toutes les vacances",
     "source": "Texte officiel",
-    "over": "Toutes les vacances de cette année scolaire sont passées."
+    "over": "Toutes les vacances de cette année scolaire sont passées.",
+    "daysOff": "Tous les jours sans classe",
+    "kindBreak": "Vacances",
+    "kindHoliday": "Jour férié",
+    "summary": "{breaks} périodes de vacances et {holidays} jours fériés",
+    "decision": "Décision ministérielle n° {ref}",
+    "issued": "Publiée le {date}",
+    "keyDates": "Dates clés"
+  },
+  "contribute": {
+    "title": "Contribuer",
+    "metaDescription": "Signalez une erreur ou envoyez une annonce officielle (Aïd, calendrier scolaire). Chaque contribution est relue avant publication.",
+    "intro": "Une date est fausse ou une annonce officielle vient de tomber ? Envoyez-la ici. Chaque contribution est relue par un mainteneur avant d’être publiée.",
+    "howTitle": "Comment ça marche",
+    "step1": "Vous envoyez le formulaire avec un lien vers une source officielle.",
+    "step2": "Votre contribution devient une demande publique sur GitHub, relue par un mainteneur.",
+    "step3": "Acceptée, elle met à jour les données au prochain déploiement. Refusée, la demande est fermée avec une explication.",
+    "kindLabel": "Type de contribution",
+    "kinds": {
+      "confirmation": {
+        "title": "Annonce d’une fête religieuse",
+        "desc": "Le ministère des Habous a annoncé la date de l’Aïd, du Mawlid ou du Nouvel An de l’Hégire."
+      },
+      "correction": {
+        "title": "Corriger une erreur",
+        "desc": "Une date, un nom ou une source est faux sur le site ou dans l’API."
+      },
+      "school-calendar": {
+        "title": "Nouveau calendrier scolaire",
+        "desc": "Le ministère de l’Éducation nationale a publié le calendrier d’une nouvelle année."
+      }
+    },
+    "fields": {
+      "holiday": "Fête",
+      "hijriYear": "Année de l’Hégire",
+      "date": "Premier jour annoncé",
+      "announcedAt": "Date et heure de l’annonce (heure du Maroc)",
+      "subject": "Qu’est-ce qui est faux ?",
+      "subjectHint": "Par exemple « Aïd al-Adha 2027 » ou l’adresse de la page.",
+      "proposedDate": "Date correcte",
+      "details": "Détails",
+      "detailsHint": "Expliquez l’erreur et ce que dit la source officielle.",
+      "schoolYear": "Année scolaire",
+      "schoolYearHint": "Par exemple 2027-2028.",
+      "sourceUrl": "Lien vers la source officielle",
+      "sourceHint": "maroc.ma, un site en .gov.ma (habous.gov.ma, men.gov.ma) ou la MAP. Les agrégateurs et les sites d’actualité sont refusés.",
+      "contact": "Votre nom ou pseudo GitHub",
+      "optional": "facultatif"
+    },
+    "publicNotice": "Votre contribution sera publiée sur GitHub. N’y mettez aucune information personnelle.",
+    "submit": "Envoyer la contribution",
+    "submitting": "Envoi…",
+    "errors": {
+      "summary": "Corrigez ces champs avant d’envoyer :",
+      "required": "Ce champ est obligatoire.",
+      "url": "Entrez une adresse complète qui commence par https://",
+      "source": "Source refusée : utilisez maroc.ma, un site en .gov.ma ou la MAP.",
+      "tooShort": "Ajoutez au moins 20 caractères.",
+      "schoolYear": "Format attendu : 2027-2028.",
+      "implausible": "Cette date est à plus de 2 jours de l’estimation. Vérifiez l’annonce.",
+      "rateLimited": "Trop d’envois. Réessayez dans quelques minutes.",
+      "generic": "L’envoi a échoué. Réessayez plus tard."
+    },
+    "success": {
+      "title": "Merci, c’est envoyé !",
+      "body": "Votre contribution n° {number} attend la relecture d’un mainteneur. Vous pouvez la suivre sur GitHub.",
+      "link": "Suivre sur GitHub",
+      "another": "Envoyer une autre contribution"
+    },
+    "disabled": {
+      "title": "Envoi direct indisponible",
+      "body": "Continuez sur GitHub : la demande est préremplie avec vos réponses (un compte GitHub est nécessaire).",
+      "link": "Continuer sur GitHub"
+    },
+    "cta": "Contribuer",
+    "suggestFix": "Signaler une erreur",
+    "sendAnnouncement": "Envoyer l’annonce officielle"
   }
 }

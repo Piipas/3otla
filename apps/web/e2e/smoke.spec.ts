@@ -50,15 +50,34 @@ for (const { locale, dir, upcoming } of LOCALES) {
 }
 
 for (const { locale, dir } of LOCALES) {
-  test(`${locale} school holidays page shows both calendars`, async ({ page }) => {
+  test(`${locale} school holidays page lists every day off of the official annex`, async ({
+    page,
+  }) => {
     const errors = collectErrors(page);
     await page.goto(`/${locale}/school`);
     await expect(page.locator("html")).toHaveAttribute("dir", dir);
     await expect(page.locator("#school-public")).toBeVisible();
-    await expect(page.locator("#school-aefe")).toBeVisible();
-    await expect(page.locator("#school-public li")).toHaveCount(7);
-    await expect(page.locator("#school-aefe li")).toHaveCount(4);
+    await expect(page.locator("#school-aefe")).toHaveCount(0);
+    // MEN decision 047.26, Annex 1: 7 breaks + 8 public holidays.
+    await expect(page.locator('li[data-kind="break"]')).toHaveCount(7);
+    await expect(page.locator('li[data-kind="holiday"]')).toHaveCount(8);
     await expect(page.locator('#school-public a[href*="men.gov.ma"]')).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+
+  test(`${locale} contribute form validates sources and pre-fills from links`, async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.goto(`/${locale}/contribute?kind=confirmation&holidayId=eid-al-adha&hijriYear=1448`);
+    await expect(page.locator("html")).toHaveAttribute("dir", dir);
+    await expect(page.locator('select[name="holidayId"]')).toHaveValue("eid-al-adha");
+    await expect(page.locator('input[name="hijriYear"]')).toHaveValue("1448");
+
+    await page.locator('input[name="sourceUrl"]').fill("https://www.timeanddate.com/holidays");
+    await page.locator('button[type="submit"]').click();
+    const summary = page.locator("form").getByRole("alert");
+    await expect(summary).toBeFocused();
+    await expect(page.locator('input[name="sourceUrl"]')).toHaveAttribute("aria-invalid", "true");
+    await expect(page.locator('input[name="date"]')).toHaveAttribute("aria-invalid", "true");
     expect(errors).toEqual([]);
   });
 }

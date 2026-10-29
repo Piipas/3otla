@@ -57,11 +57,6 @@ const CALENDAR_NAMES: Record<FeedId, Labels> = {
     fr: "Vacances scolaires au Maroc (enseignement public)",
     en: "Morocco school holidays (public schools)",
   },
-  "school-aefe": {
-    ar: "العطل المدرسية للمؤسسات الفرنسية بالمغرب",
-    fr: "Vacances scolaires des établissements français au Maroc",
-    en: "School holidays, French schools in Morocco",
-  },
 };
 
 const STATUS_TEXT: Record<Status, Labels> = {

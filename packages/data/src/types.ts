@@ -54,8 +54,8 @@ export interface Confirmation {
 }
 
 /** School calendars. These are not public holidays and never count as days off for workers. */
-export type SchoolCalendarId = "school-public" | "school-aefe";
-export const SCHOOL_CALENDARS: readonly SchoolCalendarId[] = ["school-public", "school-aefe"];
+export type SchoolCalendarId = "school-public";
+export const SCHOOL_CALENDARS: readonly SchoolCalendarId[] = ["school-public"];
 
 /** Inclusive range of days without classes. */
 export interface FixedSchoolBreak {

@@ -4,32 +4,25 @@ import { cacheFor } from "../cache";
 import { type ApiApp, type ApiContext, calendarsFor, meta, toHoliday } from "../context";
 import {
   CalendarParamSchema,
-  ErrorSchema,
   envelope,
+  errorResponses,
   HolidaySchema,
   IsoDateParam,
   LocaleSchema,
 } from "../schemas";
 
-const errors = {
-  400: {
-    description: "Invalid parameters",
-    content: { "application/json": { schema: ErrorSchema } },
-  },
-  429: { description: "Rate limited", content: { "application/json": { schema: ErrorSchema } } },
-};
-
 const listRoute = createRoute({
   method: "get",
   path: "/v1/holidays",
+  operationId: "listHolidays",
   tags: ["Holidays"],
   summary: "Holidays of a year",
   description:
-    "All holidays overlapping the given year, sorted by date. A multi-day holiday starting on Dec 31 of the previous year is included.",
+    "Every public holiday overlapping the year, sorted by date. A multi-day holiday that starts on 31 December of the previous year is included. A Gregorian year can hold two occurrences of the same Hijri holiday (e.g. Eid al-Fitr in 2033): use `key` to tell them apart.\n\nWithout `year`, answers for the current year in Morocco and is cached for 5 minutes; with `year`, it is cached for a day.",
   request: {
     query: z.object({
       year: z.coerce.number().int().optional().openapi({
-        description: "Gregorian year. Defaults to the current year in Morocco.",
+        description: "Gregorian year, 2024–2035. Defaults to the current year in Morocco.",
         example: 2027,
       }),
       calendar: CalendarParamSchema,
@@ -41,21 +34,31 @@ const listRoute = createRoute({
       description: "Holidays",
       content: { "application/json": { schema: envelope(z.array(HolidaySchema)) } },
     },
-    ...errors,
+    ...errorResponses,
   },
 });
 
 const nextRoute = createRoute({
   method: "get",
   path: "/v1/holidays/next",
+  operationId: "nextHolidays",
   tags: ["Holidays"],
   summary: "Upcoming holidays",
   description:
-    "The next holidays from today in Morocco (or `from`). A holiday in progress is included.",
+    "The next holidays from today in Morocco (or from `from`). A holiday in progress is included, so on the second day of Eid the first result is that Eid. Ideal for a countdown.",
   request: {
     query: z.object({
-      count: z.coerce.number().int().min(1).max(MAX_NEXT_COUNT).default(5),
-      from: IsoDateParam.optional().openapi({ description: "Defaults to today in Morocco." }),
+      count: z.coerce
+        .number()
+        .int()
+        .min(1)
+        .max(MAX_NEXT_COUNT)
+        .default(5)
+        .openapi({ description: `How many holidays, 1–${MAX_NEXT_COUNT}.`, example: 3 }),
+      from: IsoDateParam.optional().openapi({
+        description: "Start date. Defaults to today in Morocco (Africa/Casablanca).",
+        example: "2027-01-01",
+      }),
       calendar: CalendarParamSchema,
       lang: LocaleSchema.optional(),
     }),
@@ -65,7 +68,7 @@ const nextRoute = createRoute({
       description: "Upcoming holidays",
       content: { "application/json": { schema: envelope(z.array(HolidaySchema)) } },
     },
-    ...errors,
+    ...errorResponses,
   },
 });
 

@@ -44,7 +44,7 @@ export function StatusBadge({
       data-status={status}
       className={cn(
         "inline-flex items-center gap-1.5 rounded-full font-medium ring-1 ring-current/15 transition hover:ring-current/40",
-        size === "sm" ? "px-2.5 py-0.5 text-xs" : "px-3 py-1 text-sm",
+        size === "sm" ? "min-h-6 px-2.5 py-0.5 text-xs" : "min-h-8 px-3 py-1 text-sm",
         STYLES[status],
         className,
       )}

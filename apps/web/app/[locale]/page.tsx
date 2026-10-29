@@ -35,7 +35,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: A
       <FadeIn delay={0.05}>
         <section
           aria-labelledby="next-holiday"
-          className="relative isolate overflow-hidden rounded-xl bg-linear-to-br from-brand to-brand-deep px-6 py-10 text-white shadow-[0_30px_80px_-40px_var(--brand)] sm:px-12 sm:py-14 dark:from-[#3b46c9] dark:to-brand-deep"
+          className="relative isolate overflow-hidden rounded-xl bg-linear-to-br from-hero-from to-hero-to px-6 py-10 text-white shadow-[0_30px_80px_-40px_var(--hero-from)] sm:px-12 sm:py-14"
         >
           <div
             aria-hidden="true"

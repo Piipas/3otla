@@ -12,7 +12,7 @@ import type { MiddlewareHandler } from "hono";
 import { isSharedCacheable } from "./cache";
 import { apiError } from "./errors";
 
-export type Bucket = "api" | "ics";
+export type Bucket = "api" | "ics" | "contribute";
 
 export interface Limits {
   perMinute: number;
@@ -38,6 +38,8 @@ type Env = Record<string, string | undefined>;
 const DEFAULT_LIMITS: Record<Bucket, Limits> = {
   api: { perMinute: 60, perDay: 2000 },
   ics: { perMinute: 120, perDay: 20000 },
+  /** Each accepted request opens a GitHub issue. */
+  contribute: { perMinute: 3, perDay: 10 },
 };
 
 function positiveInt(value: string | undefined, fallback: number): number {
@@ -55,6 +57,7 @@ export function limitsFromEnv(env: Env): Record<Bucket, Limits> {
       perMinute: positiveInt(env.ICS_RATE_LIMIT_PER_MINUTE, DEFAULT_LIMITS.ics.perMinute),
       perDay: positiveInt(env.ICS_RATE_LIMIT_PER_DAY, DEFAULT_LIMITS.ics.perDay),
     },
+    contribute: DEFAULT_LIMITS.contribute,
   };
 }
 
@@ -75,6 +78,7 @@ export function createUpstashLimiter(redis: Redis, limits: Record<Bucket, Limits
   const limiters = {
     api: { minute: make("api", "minute"), day: make("api", "day") },
     ics: { minute: make("ics", "minute"), day: make("ics", "day") },
+    contribute: { minute: make("contribute", "minute"), day: make("contribute", "day") },
   };
 
   return {

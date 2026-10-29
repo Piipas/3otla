@@ -2,26 +2,33 @@ import { generateIcs, generateSchoolIcs, SUPPORTED_YEARS, todayInCasablanca } fr
 import { createRoute, z } from "@hono/zod-openapi";
 import { cacheFor } from "../cache";
 import type { ApiApp, ApiContext } from "../context";
-import { ErrorSchema } from "../schemas";
+import { errorResponses } from "../schemas";
 
-const FILES = [
-  "all.ics",
-  "national.ics",
-  "religious.ics",
-  "school-public.ics",
-  "school-aefe.ics",
-] as const;
+const FILES = ["all.ics", "national.ics", "religious.ics", "school-public.ics"] as const;
 
 const icsRoute = createRoute({
   method: "get",
   path: "/v1/calendars/{file}",
+  operationId: "getCalendarFeed",
   tags: ["Calendars"],
   summary: "Subscribable calendar feed (.ics)",
-  description:
-    "iCalendar feed covering last year to two years ahead. Subscribe by URL in Google Calendar, Apple Calendar or Outlook. Estimated dates are marked TENTATIVE and update in place once confirmed.",
+  description: [
+    "iCalendar feed covering last year to two years ahead (the school feed covers published school years).",
+    "",
+    "Subscribe by URL rather than downloading the file, so your calendar picks up confirmations:",
+    "- **Google Calendar**: Other calendars → From URL → paste the feed URL.",
+    "- **Apple Calendar**: File → New Calendar Subscription, or open the `webcal://` URL.",
+    "- **Outlook**: Add calendar → Subscribe from web.",
+    "",
+    "Estimated dates are marked `STATUS:TENTATIVE`. Event UIDs are stable, so a confirmed date updates the existing event in place.",
+  ].join("\n"),
   request: {
     params: z.object({
-      file: z.enum(FILES).openapi({ example: "national.ics" }),
+      file: z.enum(FILES).openapi({
+        description:
+          "`all`, `national` or `religious` public holidays, or `school-public` school breaks.",
+        example: "national.ics",
+      }),
     }),
     query: z.object({
       lang: z.enum(["ar", "fr", "en"]).default("fr").openapi({ description: "Event language." }),
@@ -30,13 +37,15 @@ const icsRoute = createRoute({
   responses: {
     200: {
       description: "iCalendar file",
-      content: { "text/calendar": { schema: z.string() } },
+      content: {
+        "text/calendar": {
+          schema: z.string(),
+          example:
+            "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//3otla//Moroccan holidays//FR\r\nX-WR-CALNAME:Jours fériés au Maroc\r\n…\r\nEND:VCALENDAR\r\n",
+        },
+      },
     },
-    400: {
-      description: "Invalid parameters",
-      content: { "application/json": { schema: ErrorSchema } },
-    },
-    429: { description: "Rate limited", content: { "application/json": { schema: ErrorSchema } } },
+    ...errorResponses,
   },
 });
 
@@ -50,7 +59,7 @@ export function registerCalendarRoutes(app: ApiApp, ctx: ApiContext) {
     // Stable for the whole day so the ETag only changes when content does.
     const now = new Date(`${today}T00:00:00Z`);
     const ics =
-      calendar === "school-public" || calendar === "school-aefe"
+      calendar === "school-public"
         ? generateSchoolIcs(calendar, { lang, baseUrl: ctx.baseUrl, now })
         : generateIcs(calendar as "all" | "national" | "religious", {
             lang,

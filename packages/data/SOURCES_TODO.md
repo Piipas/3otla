@@ -30,11 +30,6 @@ official source. Never "fix" these from aggregators, news or job sites.
   on men.gov.ma. Five fixed breaks plus the Eid al-Fitr (29 Ramadan – 2 Shawwal) and
   Eid al-Adha (9 – 11 Dhu al-Hijja) breaks, which are Umm al-Qura estimates until the
   Eids are confirmed.
-- [x] AEFE: calendar signed by the French Embassy (SCAC), Rabat, 1 June 2026, hosted on
-  efmaroc.org (now on the source allowlist). Breaks stored as full days off: "Saturday
-  after classes → Monday morning" becomes Sunday → Sunday.
-- [ ] AEFE "Lundi de Pâques" is moved to Monday 17 or Wednesday 19 May 2027 depending on
-  Eid al-Adha. Not modelled yet; add it once the date is fixed.
 - [ ] The MEN Eid al-Fitr break is "3 or 4 days" depending on whether Ramadan has 29 or 30
   days. Once Habous confirms Eid al-Fitr 1448, add the confirmation and check the break
   dates on /school.

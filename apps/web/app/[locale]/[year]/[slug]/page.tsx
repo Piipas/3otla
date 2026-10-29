@@ -1,5 +1,5 @@
 import { addDays, type HolidayOccurrence, startOfDayInCasablanca } from "@3otla/core";
-import { ExternalLink, ScrollText } from "lucide-react";
+import { ExternalLink, Megaphone, MessageSquareWarning, ScrollText } from "lucide-react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -7,6 +7,7 @@ import { Countdown } from "@/components/countdown";
 import { FadeIn } from "@/components/motion";
 import { StatusBadge } from "@/components/status-badge";
 import { SubscribeMenu } from "@/components/subscribe-menu";
+import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import type { AppLocale } from "@/i18n/routing";
@@ -61,6 +62,7 @@ export default async function HolidayPage({ params }: { params: Params }) {
   const { year, def, occurrences } = data;
   const t = await getTranslations();
   const name = def.labels[locale];
+  const estimated = occurrences.find((o) => o.status === "estimated");
 
   const jsonLd = occurrences.map((occ) => ({
     "@context": "https://schema.org",
@@ -204,11 +206,29 @@ export default async function HolidayPage({ params }: { params: Params }) {
             ))}
           </ul>
         </section>
-        <SubscribeMenu
-          variant="outline"
-          feed={feedLinks(def.calendar, locale)}
-          calendarLabel={t(`calendars.${def.calendar}`)}
-        />
+        <div className="flex flex-wrap gap-3">
+          <SubscribeMenu
+            variant="outline"
+            feed={feedLinks(def.calendar, locale)}
+            calendarLabel={t(`calendars.${def.calendar}`)}
+          />
+          {estimated?.hijri ? (
+            <Link
+              href={`/contribute?kind=confirmation&holidayId=${slug}&hijriYear=${estimated.hijri.year}`}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              <Megaphone className="rtl:-scale-x-100" aria-hidden="true" />
+              {t("contribute.sendAnnouncement")}
+            </Link>
+          ) : null}
+          <Link
+            href={`/contribute?kind=correction&subject=${encodeURIComponent(`${name} ${year}`)}`}
+            className={buttonVariants({ variant: "ghost" })}
+          >
+            <MessageSquareWarning aria-hidden="true" />
+            {t("contribute.suggestFix")}
+          </Link>
+        </div>
       </FadeIn>
     </article>
   );
