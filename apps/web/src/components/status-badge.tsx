@@ -3,6 +3,9 @@ import { BadgeCheck, CalendarCheck, MoonStar } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
+/** Anything with a dated status: holiday occurrences and school breaks. */
+type Dated = Pick<HolidayOccurrence, "status" | "dateSource" | "sourceUrl">;
+
 const STYLES = {
   fixed: "bg-fixed-soft text-fixed",
   estimated: "bg-estimated-soft text-estimated",
@@ -12,7 +15,7 @@ const STYLES = {
 const ICONS = { fixed: CalendarCheck, estimated: MoonStar, confirmed: BadgeCheck } as const;
 
 /** Where the badge links: the source that justifies this *date*. */
-export function statusHref(occ: HolidayOccurrence, locale: string): string {
+export function statusHref(occ: Dated, locale: string): string {
   if (occ.dateSource.kind === "habous-announcement") return occ.dateSource.url;
   if (occ.status === "estimated") return `/${locale}/sources#religious`;
   return occ.sourceUrl;
@@ -23,7 +26,7 @@ export function StatusBadge({
   size = "sm",
   className,
 }: {
-  occurrence: HolidayOccurrence;
+  occurrence: Dated;
   size?: "sm" | "md";
   className?: string;
 }) {

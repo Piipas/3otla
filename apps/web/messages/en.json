@@ -14,7 +14,8 @@
     "calendar": "Calendar",
     "sources": "Sources",
     "api": "API",
-    "skip": "Skip to content"
+    "skip": "Skip to content",
+    "school": "School holidays"
   },
   "home": {
     "kicker": "Next public holiday",
@@ -43,7 +44,9 @@
   "calendars": {
     "national": "National holidays",
     "religious": "Religious holidays",
-    "all": "All public holidays"
+    "all": "All public holidays",
+    "school-public": "School holidays (public)",
+    "school-aefe": "School holidays (AEFE)"
   },
   "holiday": {
     "days": "{count, plural, one {# day} other {# days}}",
@@ -109,5 +112,23 @@
   "notFound": {
     "title": "Page not found",
     "back": "Back to home"
+  },
+  "school": {
+    "title": "School holidays {schoolYear}",
+    "metaDescription": "Official {schoolYear} school holiday calendar in Morocco: public schools (Ministry of National Education) and French schools (AEFE), with official sources.",
+    "intro": "Morocco’s official school holidays, from the calendars published by the Ministry of National Education and, for French schools, by the French Embassy.",
+    "notHolidays": "School breaks are not public holidays: they don’t change working days. Public holidays come on top of them.",
+    "publicHolidays": "See public holidays",
+    "public": "Public schools",
+    "publicSub": "Ministry of National Education, Preschool and Sports",
+    "aefe": "French schools (AEFE)",
+    "aefeSub": "French Embassy in Morocco",
+    "next": "Next break",
+    "inProgress": "Ongoing until {date}",
+    "classesStart": "First day of classes",
+    "classesEnd": "Last day of classes",
+    "breaks": "All breaks",
+    "source": "Official text",
+    "over": "All breaks of this school year are over."
   }
 }

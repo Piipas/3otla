@@ -7,6 +7,7 @@ import { type RateLimiter, type RateLimitOptions, rateLimit } from "./ratelimit"
 import { registerCalendarRoutes } from "./routes/calendars";
 import { registerDateRoutes } from "./routes/dates";
 import { registerHolidayRoutes } from "./routes/holidays";
+import { registerSchoolRoutes } from "./routes/school";
 
 export interface CreateApiOptions extends Partial<ApiContext> {
   limiter?: RateLimiter | null;
@@ -61,6 +62,7 @@ export function createApi(options: CreateApiOptions = {}) {
 
   registerHolidayRoutes(app, ctx);
   registerDateRoutes(app, ctx);
+  registerSchoolRoutes(app, ctx);
   registerCalendarRoutes(app, ctx);
 
   app.doc31("/openapi.json", {

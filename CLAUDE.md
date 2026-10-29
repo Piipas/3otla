@@ -28,6 +28,11 @@ Moroccan public holidays: website + free public API. Trilingual (ar RTL, fr, en)
 - Occurrence `key` = `id:hijriYear` or `id:gregorianYear`. It is stable when a date is
   confirmed (used as .ics UID). A Gregorian year can hold two occurrences of a Hijri holiday.
 - Supported years: `SUPPORTED_YEARS` in `packages/core/src/resolve.ts` (2024–2035).
+- School calendars: `packages/data/school/<calendar>/<YYYY-YYYY>.json` (`school-public`,
+  `school-aefe`), one file per school year, registered in `packages/data/src/index.ts`.
+  Breaks are inclusive days off; breaks tied to Eid are Hijri ranges that move with the
+  Eid's confirmation. **School breaks are not public holidays**: they never feed
+  `isHoliday` or `workdays` (`packages/core/src/school.ts`).
 
 ## Code conventions
 

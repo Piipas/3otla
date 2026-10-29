@@ -14,7 +14,8 @@
     "calendar": "Calendrier",
     "sources": "Sources",
     "api": "API",
-    "skip": "Aller au contenu"
+    "skip": "Aller au contenu",
+    "school": "Vacances scolaires"
   },
   "home": {
     "kicker": "Prochain jour férié",
@@ -43,7 +44,9 @@
   "calendars": {
     "national": "Fêtes nationales",
     "religious": "Fêtes religieuses",
-    "all": "Tous les jours fériés"
+    "all": "Tous les jours fériés",
+    "school-public": "Vacances scolaires (public)",
+    "school-aefe": "Vacances scolaires (AEFE)"
   },
   "holiday": {
     "days": "{count, plural, one {# jour} other {# jours}}",
@@ -109,5 +112,23 @@
   "notFound": {
     "title": "Page introuvable",
     "back": "Retour à l’accueil"
+  },
+  "school": {
+    "title": "Vacances scolaires {schoolYear}",
+    "metaDescription": "Calendrier officiel des vacances scolaires {schoolYear} au Maroc : enseignement public (ministère de l’Éducation nationale) et établissements français (AEFE), avec sources officielles.",
+    "intro": "Les vacances scolaires officielles au Maroc, d’après les calendriers publiés par le ministère de l’Éducation nationale et, pour les établissements français, par l’Ambassade de France.",
+    "notHolidays": "Les vacances scolaires ne sont pas des jours fériés : elles ne changent pas les jours ouvrables. Les jours fériés s’y ajoutent.",
+    "publicHolidays": "Voir les jours fériés",
+    "public": "Enseignement public",
+    "publicSub": "Ministère de l’Éducation nationale, du Préscolaire et des Sports",
+    "aefe": "Établissements français (AEFE)",
+    "aefeSub": "Ambassade de France au Maroc",
+    "next": "Prochaines vacances",
+    "inProgress": "En cours jusqu’au {date}",
+    "classesStart": "Rentrée",
+    "classesEnd": "Fin des cours",
+    "breaks": "Toutes les vacances",
+    "source": "Texte officiel",
+    "over": "Toutes les vacances de cette année scolaire sont passées."
   }
 }

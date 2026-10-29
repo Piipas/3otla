@@ -1,0 +1,107 @@
+{
+  "$schema": "../../schema/school-calendar.schema.json",
+  "calendar": "school-public",
+  "schoolYear": "2026-2027",
+  "sourceUrl": "https://www.men.gov.ma/sites/default/files/2026-09/%D9%85%D9%82%D8%B1%D8%B1%20047.26.pdf",
+  "decisionRefs": [{ "ref": "047.26", "kind": "ministerial-decision" }],
+  "issuedAt": "2026-07-03",
+  "classesStart": "2026-09-07",
+  "classesEnd": "2027-06-26",
+  "classesEndExceptions": [
+    {
+      "labels": {
+        "ar": "السنة الثانية من سلك البكالوريا",
+        "fr": "2ᵉ année du baccalauréat",
+        "en": "Final baccalaureate year"
+      },
+      "date": "2027-05-29"
+    }
+  ],
+  "breaks": [
+    {
+      "id": "first-term-break",
+      "labels": {
+        "ar": "الفترة البينية الأولى",
+        "fr": "Vacances intermédiaires (1ʳᵉ période)",
+        "en": "First term break"
+      },
+      "start": "2026-10-18",
+      "end": "2026-10-25",
+      "sourceText": "من يوم الأحد 18 أكتوبر 2026 إلى يوم الأحد 25 أكتوبر 2026"
+    },
+    {
+      "id": "second-term-break",
+      "labels": {
+        "ar": "الفترة البينية الثانية",
+        "fr": "Vacances intermédiaires (2ᵉ période)",
+        "en": "Second term break"
+      },
+      "start": "2026-12-06",
+      "end": "2026-12-13",
+      "sourceText": "من يوم الأحد 6 دجنبر 2026 إلى يوم الأحد 13 دجنبر 2026"
+    },
+    {
+      "id": "mid-year-break",
+      "labels": {
+        "ar": "عطلة منتصف السنة الدراسية",
+        "fr": "Vacances de mi-année",
+        "en": "Mid-year break"
+      },
+      "start": "2027-01-24",
+      "end": "2027-01-31",
+      "sourceText": "من يوم الأحد 24 يناير 2027 إلى يوم الأحد 31 يناير 2027"
+    },
+    {
+      "id": "eid-al-fitr-break",
+      "labels": {
+        "ar": "عطلة عيد الفطر",
+        "fr": "Vacances de l’Aïd al-Fitr",
+        "en": "Eid al-Fitr break"
+      },
+      "hijri": {
+        "anchor": "eid-al-fitr",
+        "year": 1448,
+        "from": { "month": 9, "day": 29 },
+        "to": { "month": 10, "day": 2 }
+      },
+      "sourceText": "من 29 رمضان إلى 2 شوال 1448 (3 أو 4 أيام)"
+    },
+    {
+      "id": "third-term-break",
+      "labels": {
+        "ar": "الفترة البينية الثالثة",
+        "fr": "Vacances intermédiaires (3ᵉ période)",
+        "en": "Third term break"
+      },
+      "start": "2027-03-21",
+      "end": "2027-03-28",
+      "sourceText": "من يوم الأحد 21 مارس 2027 إلى يوم الأحد 28 مارس 2027"
+    },
+    {
+      "id": "fourth-term-break",
+      "labels": {
+        "ar": "الفترة البينية الرابعة",
+        "fr": "Vacances intermédiaires (4ᵉ période)",
+        "en": "Fourth term break"
+      },
+      "start": "2027-05-09",
+      "end": "2027-05-16",
+      "sourceText": "من يوم الأحد 9 ماي 2027 إلى يوم الأحد 16 ماي 2027"
+    },
+    {
+      "id": "eid-al-adha-break",
+      "labels": {
+        "ar": "عطلة عيد الأضحى",
+        "fr": "Vacances de l’Aïd al-Adha",
+        "en": "Eid al-Adha break"
+      },
+      "hijri": {
+        "anchor": "eid-al-adha",
+        "year": 1448,
+        "from": { "month": 12, "day": 9 },
+        "to": { "month": 12, "day": 11 }
+      },
+      "sourceText": "9 إلى 11 ذي الحجة 1448 (3 أيام)"
+    }
+  ]
+}

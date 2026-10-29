@@ -23,7 +23,10 @@ export function formatDate(
 }
 
 /** "dimanche 16 mai 2027" or "16 – 17 mai 2027" for multi-day holidays. */
-export function formatOccurrenceDates(occ: HolidayOccurrence, locale: AppLocale): string {
+export function formatOccurrenceDates(
+  occ: Pick<HolidayOccurrence, "date" | "endDate">,
+  locale: AppLocale,
+): string {
   if (occ.date === occ.endDate) return formatDate(occ.date, locale);
   return new Intl.DateTimeFormat(INTL_LOCALE[locale], {
     day: "numeric",

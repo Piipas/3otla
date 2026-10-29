@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "school-calendar.schema.json",
+  "title": "3otla school calendar for one school year",
+  "description": "Breaks are inclusive ranges of days without classes: `start` is the first day off and `end` the last day off. An official text saying 'from Saturday 17 October after classes to Monday 2 November in the morning' becomes start 2026-10-18, end 2026-11-01. Breaks tied to a religious holiday are given in Hijri dates and resolved like the holiday itself (estimated, then confirmed).",
+  "type": "object",
+  "required": [
+    "calendar",
+    "schoolYear",
+    "sourceUrl",
+    "issuedAt",
+    "classesStart",
+    "classesEnd",
+    "breaks"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "calendar": { "enum": ["school-public", "school-aefe"] },
+    "schoolYear": { "type": "string", "pattern": "^\\d{4}-\\d{4}$" },
+    "sourceUrl": { "$ref": "#/$defs/httpsUrl" },
+    "decisionRefs": { "type": "array", "items": { "$ref": "#/$defs/decisionRef" } },
+    "issuedAt": { "$ref": "#/$defs/isoDate" },
+    "classesStart": {
+      "$ref": "#/$defs/isoDate",
+      "description": "First day of classes for pupils."
+    },
+    "classesEnd": { "$ref": "#/$defs/isoDate", "description": "Last day of classes." },
+    "classesEndExceptions": {
+      "type": "array",
+      "description": "Levels whose classes end on a different day (e.g. final baccalaureate year).",
+      "items": {
+        "type": "object",
+        "required": ["labels", "date"],
+        "additionalProperties": false,
+        "properties": {
+          "labels": { "$ref": "#/$defs/labels" },
+          "date": { "$ref": "#/$defs/isoDate" }
+        }
+      }
+    },
+    "breaks": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "oneOf": [{ "$ref": "#/$defs/fixedBreak" }, { "$ref": "#/$defs/hijriBreak" }] }
+    }
+  },
+  "$defs": {
+    "isoDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "httpsUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+    "labels": {
+      "type": "object",
+      "required": ["ar", "fr", "en"],
+      "additionalProperties": false,
+      "properties": {
+        "ar": { "type": "string", "minLength": 1 },
+        "fr": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 }
+      }
+    },
+    "decisionRef": {
+      "type": "object",
+      "required": ["ref"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "minLength": 1 },
+        "kind": {
+          "enum": ["decree", "royal-decision", "ministerial-decision", "embassy-calendar"]
+        },
+        "scope": { "enum": ["all", "public-sector", "private-sector"] },
+        "url": { "$ref": "#/$defs/httpsUrl" }
+      }
+    },
+    "hijriDay": {
+      "type": "object",
+      "required": ["month", "day"],
+      "additionalProperties": false,
+      "properties": {
+        "month": { "type": "integer", "minimum": 1, "maximum": 12 },
+        "day": { "type": "integer", "minimum": 1, "maximum": 30 }
+      }
+    },
+    "fixedBreak": {
+      "type": "object",
+      "required": ["id", "labels", "start", "end"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "labels": { "$ref": "#/$defs/labels" },
+        "start": { "$ref": "#/$defs/isoDate", "description": "First day without classes." },
+        "end": { "$ref": "#/$defs/isoDate", "description": "Last day without classes." },
+        "sourceText": {
+          "type": "string",
+          "description": "The wording of the official text, kept for audit."
+        }
+      }
+    },
+    "hijriBreak": {
+      "type": "object",
+      "required": ["id", "labels", "hijri"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "labels": { "$ref": "#/$defs/labels" },
+        "hijri": {
+          "type": "object",
+          "required": ["anchor", "year", "from", "to"],
+          "additionalProperties": false,
+          "properties": {
+            "anchor": {
+              "$ref": "#/$defs/id",
+              "description": "Religious holiday whose official confirmation shifts this break."
+            },
+            "year": {
+              "type": "integer",
+              "minimum": 1440,
+              "maximum": 1600,
+              "description": "Hijri year of the anchor holiday."
+            },
+            "from": { "$ref": "#/$defs/hijriDay" },
+            "to": { "$ref": "#/$defs/hijriDay" }
+          }
+        },
+        "sourceText": { "type": "string" }
+      }
+    }
+  }
+}

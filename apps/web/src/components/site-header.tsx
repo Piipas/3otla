@@ -30,6 +30,12 @@ export function SiteHeader() {
             {t("nav.calendar")}
           </Link>
           <Link
+            href="/school"
+            className="rounded-full px-3 py-2 text-muted hover:bg-surface-2 hover:text-ink"
+          >
+            {t("nav.school")}
+          </Link>
+          <Link
             href="/sources"
             className="rounded-full px-3 py-2 text-muted hover:bg-surface-2 hover:text-ink"
           >
@@ -51,6 +57,9 @@ export function SiteHeader() {
       >
         <Link href={`/${currentYear()}`} className="rounded-full px-3 py-1.5 text-muted">
           {t("nav.calendar")}
+        </Link>
+        <Link href="/school" className="rounded-full px-3 py-1.5 text-muted">
+          {t("nav.school")}
         </Link>
         <Link href="/sources" className="rounded-full px-3 py-1.5 text-muted">
           {t("nav.sources")}

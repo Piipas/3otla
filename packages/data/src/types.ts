@@ -53,7 +53,50 @@ export interface Confirmation {
   note?: string;
 }
 
+/** School calendars. These are not public holidays and never count as days off for workers. */
+export type SchoolCalendarId = "school-public" | "school-aefe";
+export const SCHOOL_CALENDARS: readonly SchoolCalendarId[] = ["school-public", "school-aefe"];
+
+/** Inclusive range of days without classes. */
+export interface FixedSchoolBreak {
+  id: string;
+  labels: Labels;
+  start: string;
+  end: string;
+  sourceText?: string;
+}
+
+/** Break defined in Hijri days around a religious holiday (e.g. 29 Ramadan – 2 Shawwal). */
+export interface HijriSchoolBreak {
+  id: string;
+  labels: Labels;
+  hijri: {
+    /** Religious holiday whose confirmation shifts this break. */
+    anchor: string;
+    year: number;
+    from: { month: number; day: number };
+    to: { month: number; day: number };
+  };
+  sourceText?: string;
+}
+
+export type SchoolBreakDefinition = FixedSchoolBreak | HijriSchoolBreak;
+
+export interface SchoolCalendarFile {
+  calendar: SchoolCalendarId;
+  /** "2026-2027" */
+  schoolYear: string;
+  sourceUrl: string;
+  decisionRefs?: DecisionRef[];
+  issuedAt: string;
+  classesStart: string;
+  classesEnd: string;
+  classesEndExceptions?: { labels: Labels; date: string }[];
+  breaks: SchoolBreakDefinition[];
+}
+
 export interface Dataset {
   holidays: readonly HolidayDefinition[];
   confirmations: readonly Confirmation[];
+  schoolCalendars?: readonly SchoolCalendarFile[];
 }

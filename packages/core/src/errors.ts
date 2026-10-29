@@ -3,7 +3,8 @@ export type HolidayErrorCode =
   | "invalid_range"
   | "year_out_of_range"
   | "unknown_calendar"
-  | "invalid_count";
+  | "invalid_count"
+  | "unknown_school_year";
 
 /** Thrown for invalid input. `code` is stable and maps 1:1 to API error codes. */
 export class HolidayError extends Error {

@@ -17,6 +17,10 @@ All holiday data lives in `packages/data` and is changed through pull requests.
 2. **Edit the right file:**
    - Wrong national holiday rule → `packages/data/holidays/national.json`
    - Wrong religious holiday rule → `packages/data/holidays/religious.json`
+   - School calendar → `packages/data/school/<calendar>/<YYYY-YYYY>.json`. The source must
+     be the Ministry of Education decision (men.gov.ma) or, for French schools, the
+     embassy-signed calendar on efmaroc.org. A new school year also needs one import line in
+     `packages/data/src/index.ts`.
    - An official announcement of a religious holiday date → add an entry to
      `packages/data/confirmations.json`:
 

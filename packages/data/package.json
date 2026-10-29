@@ -10,7 +10,8 @@
     "./sources": "./src/sources.ts",
     "./holidays/*": "./holidays/*",
     "./schema/*": "./schema/*",
-    "./confirmations.json": "./confirmations.json"
+    "./confirmations.json": "./confirmations.json",
+    "./school/*": "./school/*"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",

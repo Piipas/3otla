@@ -1,10 +1,16 @@
-import { generateIcs, SUPPORTED_YEARS, todayInCasablanca } from "@3otla/core";
+import { generateIcs, generateSchoolIcs, SUPPORTED_YEARS, todayInCasablanca } from "@3otla/core";
 import { createRoute, z } from "@hono/zod-openapi";
 import { cacheFor } from "../cache";
 import type { ApiApp, ApiContext } from "../context";
 import { ErrorSchema } from "../schemas";
 
-const FILES = ["all.ics", "national.ics", "religious.ics"] as const;
+const FILES = [
+  "all.ics",
+  "national.ics",
+  "religious.ics",
+  "school-public.ics",
+  "school-aefe.ics",
+] as const;
 
 const icsRoute = createRoute({
   method: "get",
@@ -40,15 +46,19 @@ export function registerCalendarRoutes(app: ApiApp, ctx: ApiContext) {
     const { lang } = c.req.valid("query");
     const today = todayInCasablanca(ctx.now());
     const year = Number(today.slice(0, 4));
-    const calendar = file.replace(/\.ics$/, "") as "all" | "national" | "religious";
-    const ics = generateIcs(calendar, {
-      lang,
-      fromYear: Math.max(SUPPORTED_YEARS.min, year - 1),
-      toYear: Math.min(SUPPORTED_YEARS.max, year + 2),
-      baseUrl: ctx.baseUrl,
-      // Stable for the whole day so the ETag only changes when content does.
-      now: new Date(`${today}T00:00:00Z`),
-    });
+    const calendar = file.replace(/\.ics$/, "");
+    // Stable for the whole day so the ETag only changes when content does.
+    const now = new Date(`${today}T00:00:00Z`);
+    const ics =
+      calendar === "school-public" || calendar === "school-aefe"
+        ? generateSchoolIcs(calendar, { lang, baseUrl: ctx.baseUrl, now })
+        : generateIcs(calendar as "all" | "national" | "religious", {
+            lang,
+            fromYear: Math.max(SUPPORTED_YEARS.min, year - 1),
+            toYear: Math.min(SUPPORTED_YEARS.max, year + 2),
+            baseUrl: ctx.baseUrl,
+            now,
+          });
     cacheFor(c, "ics");
     c.header("Content-Type", "text/calendar; charset=utf-8");
     c.header("Content-Disposition", `inline; filename="3otla-${file}"`);

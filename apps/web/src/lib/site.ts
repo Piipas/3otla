@@ -1,4 +1,4 @@
-import { type CalendarId, SUPPORTED_YEARS, todayInCasablanca } from "@3otla/core";
+import { type FeedId, SUPPORTED_YEARS, todayInCasablanca } from "@3otla/core";
 import { type AppLocale, routing } from "@/i18n/routing";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000").replace(
@@ -36,7 +36,7 @@ export function alternates(locale: AppLocale, path: string) {
   return { canonical: `${SITE_URL}/${locale}${path}`, languages };
 }
 
-export type FeedCalendar = CalendarId | "all";
+export type FeedCalendar = FeedId;
 
 export function icsUrl(calendar: FeedCalendar, locale: AppLocale): string {
   return `${SITE_URL}/api/v1/calendars/${calendar}.ics?lang=${locale}`;

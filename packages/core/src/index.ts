@@ -2,6 +2,7 @@ import { dataset } from "@3otla/data";
 import { type IsoDate, parseIsoDate } from "./date";
 import { gregorianToHijri, HIJRI_MONTHS, type HijriDate, hijriToGregorian } from "./hijri";
 import { createResolver } from "./resolve";
+import { createSchoolCalendars } from "./school";
 import type { Labels } from "./types";
 
 export {
@@ -17,7 +18,7 @@ export {
 } from "./date";
 export { HolidayError, type HolidayErrorCode } from "./errors";
 export { HIJRI_MONTHS, type HijriDate } from "./hijri";
-export type { IcsOptions } from "./ics";
+export type { FeedId, IcsBuildOptions, IcsItem, IcsOptions } from "./ics";
 export {
   createResolver,
   MAX_NEXT_COUNT,
@@ -26,11 +27,23 @@ export {
   type ResolverOptions,
   SUPPORTED_YEARS,
 } from "./resolve";
+export {
+  createSchoolCalendars,
+  type IsSchoolBreakResult,
+  type SchoolBreak,
+  type SchoolCalendars,
+  type SchoolYear,
+} from "./school";
 export * from "./types";
 
 /** Resolver bound to the official dataset in @3otla/data. */
 export const defaultResolver = createResolver(dataset);
 export const { resolveHolidays, isHoliday, nextHolidays, workdays, generateIcs } = defaultResolver;
+
+/** School calendars bound to the official dataset. School breaks are not public holidays. */
+export const defaultSchoolCalendars = createSchoolCalendars(dataset);
+export const { schoolYears, schoolYear, isSchoolBreak, nextSchoolBreaks, generateSchoolIcs } =
+  defaultSchoolCalendars;
 
 export interface HijriInfo extends HijriDate {
   monthName: Labels;

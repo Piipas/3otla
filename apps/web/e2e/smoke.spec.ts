@@ -49,6 +49,20 @@ for (const { locale, dir, upcoming } of LOCALES) {
   });
 }
 
+for (const { locale, dir } of LOCALES) {
+  test(`${locale} school holidays page shows both calendars`, async ({ page }) => {
+    const errors = collectErrors(page);
+    await page.goto(`/${locale}/school`);
+    await expect(page.locator("html")).toHaveAttribute("dir", dir);
+    await expect(page.locator("#school-public")).toBeVisible();
+    await expect(page.locator("#school-aefe")).toBeVisible();
+    await expect(page.locator("#school-public li")).toHaveCount(7);
+    await expect(page.locator("#school-aefe li")).toHaveCount(4);
+    await expect(page.locator('#school-public a[href*="men.gov.ma"]')).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+}
+
 test("RTL mirrors the header in Arabic only", async ({ page }) => {
   const logoX = async (locale: string) => {
     await page.goto(`/${locale}`);

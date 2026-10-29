@@ -277,7 +277,11 @@ export function createResolver(dataset: Dataset, options: ResolverOptions = {}):
       isoFromParts(icsOptions.toYear, 12, 31),
       selected,
     );
-    return buildIcs(calendar, occurrences, icsOptions);
+    return buildIcs(
+      calendar,
+      occurrences.map((occ) => ({ ...occ, path: `/${isoParts(occ.date)[0]}/${occ.id}` })),
+      icsOptions,
+    );
   };
 
   return { resolveHolidays, isHoliday, nextHolidays, workdays, generateIcs };

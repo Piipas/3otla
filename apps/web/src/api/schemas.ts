@@ -97,5 +97,53 @@ export const envelope = <T extends z.ZodType>(data: T) => z.object({ data, meta:
 
 export const IsoDateParam = isoDate;
 
+export const SchoolCalendarParamSchema = z.enum(["school-public", "school-aefe"]).openapi({
+  description: "`school-public`: Ministry of Education. `school-aefe`: French schools.",
+});
+
+const HijriDaySchema = z.object({ month: z.number().int(), day: z.number().int() });
+
+export const SchoolBreakSchema = z
+  .object({
+    key: z.string().openapi({ example: "school-public:2026-2027:mid-year-break" }),
+    id: z.string().openapi({ example: "mid-year-break" }),
+    calendar: z.enum(["school-public", "school-aefe"]),
+    schoolYear: z.string().openapi({ example: "2026-2027" }),
+    name: z.string().optional().openapi({ description: "Present when `lang` is given." }),
+    labels: LabelsSchema.optional().openapi({ description: "Present when `lang` is omitted." }),
+    date: isoDate.openapi({ description: "First day without classes." }),
+    endDate: isoDate.openapi({ description: "Last day without classes (inclusive)." }),
+    durationDays: z.number().int(),
+    status: z.enum(["fixed", "estimated", "confirmed"]).openapi({
+      description:
+        "`fixed`: dates set by the official calendar. Breaks tied to Eid are `estimated` until the Eid date is officially announced.",
+    }),
+    confirmedAt: z.string().optional(),
+    hijri: z
+      .object({ year: z.number().int(), from: HijriDaySchema, to: HijriDaySchema })
+      .optional(),
+    sourceUrl: z.string().openapi({ description: "Official school calendar document." }),
+    decisionRefs: z.array(DecisionRefSchema).optional(),
+    dateSource: DateSourceSchema,
+  })
+  .openapi("SchoolBreak");
+
+export const SchoolYearSchema = z
+  .object({
+    calendar: z.enum(["school-public", "school-aefe"]),
+    schoolYear: z.string(),
+    sourceUrl: z.string(),
+    decisionRefs: z.array(DecisionRefSchema).optional(),
+    issuedAt: isoDate,
+    classesStart: isoDate,
+    classesEnd: isoDate,
+    classesEndExceptions: z.array(
+      z.object({ name: z.string().optional(), labels: LabelsSchema.optional(), date: isoDate }),
+    ),
+    breaks: z.array(SchoolBreakSchema),
+  })
+  .openapi("SchoolYear");
+
+export type SchoolBreakDto = z.infer<typeof SchoolBreakSchema>;
 export type Holiday = z.infer<typeof HolidaySchema>;
 export type Meta = z.infer<typeof MetaSchema>;

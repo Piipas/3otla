@@ -5,8 +5,15 @@
  * date is confirmed, so calendar apps update the event in place. SEQUENCE is bumped
  * on confirmation so clients accept the new date.
  */
-import { addDays, isoParts } from "./date";
-import type { CalendarId, HolidayOccurrence, Labels, Locale, Status } from "./types";
+import { addDays } from "./date";
+import type {
+  CalendarId,
+  HolidayOccurrence,
+  Labels,
+  Locale,
+  SchoolCalendarId,
+  Status,
+} from "./types";
 
 export interface IcsOptions {
   lang: Locale;
@@ -18,7 +25,18 @@ export interface IcsOptions {
   now?: Date;
 }
 
-const CALENDAR_NAMES: Record<CalendarId | "all", Labels> = {
+export type FeedId = CalendarId | SchoolCalendarId | "all";
+
+/** Anything with a date range, a status and a page on the site. */
+export type IcsItem = Pick<
+  HolidayOccurrence,
+  "key" | "labels" | "date" | "endDate" | "status" | "sourceUrl" | "dateSource" | "confirmedAt"
+> & {
+  /** Page path without the locale prefix, e.g. "/2027/eid-al-adha". */
+  path: string;
+};
+
+const CALENDAR_NAMES: Record<FeedId, Labels> = {
   national: {
     ar: "العطل الوطنية بالمغرب",
     fr: "Jours fériés nationaux au Maroc",
@@ -33,6 +51,16 @@ const CALENDAR_NAMES: Record<CalendarId | "all", Labels> = {
     ar: "العطل الرسمية بالمغرب",
     fr: "Jours fériés au Maroc",
     en: "Morocco public holidays",
+  },
+  "school-public": {
+    ar: "العطل المدرسية بالمغرب (التعليم العمومي)",
+    fr: "Vacances scolaires au Maroc (enseignement public)",
+    en: "Morocco school holidays (public schools)",
+  },
+  "school-aefe": {
+    ar: "العطل المدرسية للمؤسسات الفرنسية بالمغرب",
+    fr: "Vacances scolaires des établissements français au Maroc",
+    en: "School holidays, French schools in Morocco",
   },
 };
 
@@ -95,12 +123,12 @@ const icsDateTime = (d: Date) =>
     .replace(/[-:]/g, "")
     .replace(/\.\d{3}/, "");
 
-function eventLines(occ: HolidayOccurrence, options: IcsOptions, stamp: string): string[] {
+function eventLines(occ: IcsItem, options: IcsBuildOptions, stamp: string): string[] {
   const { lang, baseUrl } = options;
   const name = occ.labels[lang];
   const summary = occ.status === "estimated" ? `${name} (${ESTIMATED_SUFFIX[lang]})` : name;
   const dateSourceUrl = occ.dateSource.kind === "habous-announcement" ? occ.dateSource.url : null;
-  const url = `${baseUrl}/${lang}/${isoParts(occ.date)[0]}/${occ.id}`;
+  const url = `${baseUrl}/${lang}${occ.path}`;
   const description = [
     STATUS_TEXT[occ.status][lang],
     `${SOURCE_LABEL[lang]}: ${dateSourceUrl ?? occ.sourceUrl}`,
@@ -109,7 +137,7 @@ function eventLines(occ: HolidayOccurrence, options: IcsOptions, stamp: string):
 
   const lines = [
     "BEGIN:VEVENT",
-    `UID:${occ.key.replace(":", "-")}@3otla`,
+    `UID:${occ.key.replaceAll(":", "-")}@3otla`,
     `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${icsDate(occ.date)}`,
     `DTEND;VALUE=DATE:${icsDate(addDays(occ.endDate, 1))}`,
@@ -124,13 +152,15 @@ function eventLines(occ: HolidayOccurrence, options: IcsOptions, stamp: string):
   return lines;
 }
 
+export type IcsBuildOptions = Pick<IcsOptions, "lang" | "baseUrl" | "now">;
+
 export function buildIcs(
-  calendar: CalendarId | "all",
-  occurrences: readonly HolidayOccurrence[],
-  options: IcsOptions,
+  feed: FeedId,
+  items: readonly IcsItem[],
+  options: IcsBuildOptions,
 ): string {
   const stamp = icsDateTime(options.now ?? new Date());
-  const name = CALENDAR_NAMES[calendar][options.lang];
+  const name = CALENDAR_NAMES[feed][options.lang];
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
@@ -142,7 +172,7 @@ export function buildIcs(
     "X-WR-TIMEZONE:Africa/Casablanca",
     "REFRESH-INTERVAL;VALUE=DURATION:PT12H",
     "X-PUBLISHED-TTL:PT12H",
-    ...occurrences.flatMap((occ) => eventLines(occ, options, stamp)),
+    ...items.flatMap((item) => eventLines(item, options, stamp)),
     "END:VCALENDAR",
   ];
   return `${lines.map(fold).join("\r\n")}\r\n`;

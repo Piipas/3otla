@@ -30,7 +30,9 @@ export function apiError(
 
 /** Maps any thrown error to the consistent error shape. */
 export function handleError(err: Error, c: Context) {
-  if (err instanceof HolidayError) return apiError(c, 400, err.code, err.message);
+  if (err instanceof HolidayError) {
+    return apiError(c, err.code === "unknown_school_year" ? 404 : 400, err.code, err.message);
+  }
   console.error("[api] unhandled error", err);
   return apiError(c, 500, "internal", "Internal server error");
 }

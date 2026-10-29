@@ -10,8 +10,9 @@ export type {
   HolidayDefinition,
   Labels,
   Locale,
+  SchoolCalendarId,
 } from "@3otla/data";
-export { CALENDARS, LOCALES } from "@3otla/data";
+export { CALENDARS, LOCALES, SCHOOL_CALENDARS } from "@3otla/data";
 
 /**
  * - fixed: Gregorian rule, the date is certain.

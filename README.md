@@ -34,7 +34,15 @@ curl "https://3otla.vercel.app/api/v1/hijri/2027-05-16"
 
 # Subscribable calendar feed (Google Calendar, Apple Calendar, Outlook)
 curl "https://3otla.vercel.app/api/v1/calendars/national.ics"
+
+# School holidays: public schools (Ministry of Education) or French schools (AEFE)
+curl "https://3otla.vercel.app/api/v1/school/school-public?lang=fr"
+curl "https://3otla.vercel.app/api/v1/school/school-aefe/next?count=2"
+curl "https://3otla.vercel.app/api/v1/calendars/school-public.ics"
 ```
+
+School breaks come from the official yearly calendars and are kept separate from public
+holidays: they never change `/is-holiday` or `/workdays`.
 
 Rate limits protect against abuse only: 60 requests/minute and 2000/day per IP.
 

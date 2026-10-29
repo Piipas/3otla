@@ -188,6 +188,8 @@ describe("cross-cutting", () => {
       "/api/v1/holidays",
       "/api/v1/holidays/next",
       "/api/v1/is-holiday/{date}",
+      "/api/v1/school/{calendar}",
+      "/api/v1/school/{calendar}/next",
       "/api/v1/workdays",
     ]);
   });
