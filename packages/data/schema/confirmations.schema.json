@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "confirmations.schema.json",
+  "title": "3otla official confirmations of Hijri holiday dates",
+  "type": "object",
+  "required": ["confirmations"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "confirmations": { "type": "array", "items": { "$ref": "#/$defs/confirmation" } }
+  },
+  "$defs": {
+    "isoDate": {
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "confirmation": {
+      "type": "object",
+      "required": ["holidayId", "hijriYear", "date", "announcedAt", "sourceUrl"],
+      "additionalProperties": false,
+      "properties": {
+        "holidayId": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "hijriYear": { "type": "integer", "minimum": 1440, "maximum": 1600 },
+        "date": { "$ref": "#/$defs/isoDate" },
+        "announcedAt": { "type": "string", "format": "date-time" },
+        "sourceUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "durationDays": { "type": "integer", "minimum": 1, "maximum": 7 },
+        "note": { "type": "string" }
+      }
+    }
+  }
+}

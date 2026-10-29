@@ -1,0 +1,255 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`generateIcs > national feed (fr) matches snapshot 1`] = `
+"BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//3otla//Moroccan Holidays//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+NAME:Jours fériés nationaux au Maroc
+X-WR-CALNAME:Jours fériés nationaux au Maroc
+X-WR-TIMEZONE:Africa/Casablanca
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+BEGIN:VEVENT
+UID:new-year-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260101
+DTEND;VALUE=DATE:20260102
+SUMMARY:Nouvel An
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/new-year
+URL:https://3otla.example/fr/2026/new-year
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:independence-manifesto-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260111
+DTEND;VALUE=DATE:20260112
+SUMMARY:Manifeste de l’Indépendance
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/independen
+ ce-manifesto
+URL:https://3otla.example/fr/2026/independence-manifesto
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:amazigh-new-year-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260114
+DTEND;VALUE=DATE:20260115
+SUMMARY:Nouvel An amazigh
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/amazigh-ne
+ w-year
+URL:https://3otla.example/fr/2026/amazigh-new-year
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:labour-day-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260501
+DTEND;VALUE=DATE:20260502
+SUMMARY:Fête du Travail
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/labour-day
+URL:https://3otla.example/fr/2026/labour-day
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:throne-day-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260730
+DTEND;VALUE=DATE:20260731
+SUMMARY:Fête du Trône
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/throne-day
+URL:https://3otla.example/fr/2026/throne-day
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:oued-ed-dahab-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260814
+DTEND;VALUE=DATE:20260815
+SUMMARY:Allégeance d’Oued Ed-Dahab
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/oued-ed-da
+ hab
+URL:https://3otla.example/fr/2026/oued-ed-dahab
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:revolution-of-the-king-and-the-people-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260820
+DTEND;VALUE=DATE:20260821
+SUMMARY:Révolution du Roi et du Peuple
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/revolution
+ -of-the-king-and-the-people
+URL:https://3otla.example/fr/2026/revolution-of-the-king-and-the-people
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:youth-day-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260821
+DTEND;VALUE=DATE:20260822
+SUMMARY:Fête de la Jeunesse
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/youth-day
+URL:https://3otla.example/fr/2026/youth-day
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:unity-day-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20261031
+DTEND;VALUE=DATE:20261101
+SUMMARY:Fête de l’Unité
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/unity-day
+URL:https://3otla.example/fr/2026/unity-day
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:green-march-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20261106
+DTEND;VALUE=DATE:20261107
+SUMMARY:Marche Verte
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/green-marc
+ h
+URL:https://3otla.example/fr/2026/green-march
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:independence-day-2026@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20261118
+DTEND;VALUE=DATE:20261119
+SUMMARY:Fête de l’Indépendance
+DESCRIPTION:Date fixe.\\nSource: https://www.maroc.ma/index%2Ephp/en/morocco
+ /religious-and-national-holidays\\nhttps://3otla.example/fr/2026/independen
+ ce-day
+URL:https://3otla.example/fr/2026/independence-day
+STATUS:CONFIRMED
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+END:VCALENDAR
+"
+`;
+
+exports[`generateIcs > religious feed (ar) matches snapshot 1`] = `
+"BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//3otla//Moroccan Holidays//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+NAME:الأعياد الدينية بالمغرب
+X-WR-CALNAME:الأعياد الدينية بالمغرب
+X-WR-TIMEZONE:Africa/Casablanca
+REFRESH-INTERVAL;VALUE=DURATION:PT12H
+X-PUBLISHED-TTL:PT12H
+BEGIN:VEVENT
+UID:eid-al-fitr-1447@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260320
+DTEND;VALUE=DATE:20260322
+SUMMARY:عيد الفطر (تاريخ تقديري)
+DESCRIPTION:تاريخ تقديري (تقويم أم القرى). قد يت
+ أخر بيوم حسب رؤية الهلال بالمغرب.\\nالمصدر
+ : https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holid
+ ays\\nhttps://3otla.example/ar/2026/eid-al-fitr
+URL:https://3otla.example/ar/2026/eid-al-fitr
+STATUS:TENTATIVE
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:eid-al-adha-1447@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260527
+DTEND;VALUE=DATE:20260529
+SUMMARY:عيد الأضحى (تاريخ تقديري)
+DESCRIPTION:تاريخ تقديري (تقويم أم القرى). قد يت
+ أخر بيوم حسب رؤية الهلال بالمغرب.\\nالمصدر
+ : https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holid
+ ays\\nhttps://3otla.example/ar/2026/eid-al-adha
+URL:https://3otla.example/ar/2026/eid-al-adha
+STATUS:TENTATIVE
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:islamic-new-year-1448@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260616
+DTEND;VALUE=DATE:20260617
+SUMMARY:فاتح محرم (تاريخ تقديري)
+DESCRIPTION:تاريخ تقديري (تقويم أم القرى). قد يت
+ أخر بيوم حسب رؤية الهلال بالمغرب.\\nالمصدر
+ : https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holid
+ ays\\nhttps://3otla.example/ar/2026/islamic-new-year
+URL:https://3otla.example/ar/2026/islamic-new-year
+STATUS:TENTATIVE
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+BEGIN:VEVENT
+UID:mawlid-1448@3otla
+DTSTAMP:20261029T120000Z
+DTSTART;VALUE=DATE:20260825
+DTEND;VALUE=DATE:20260827
+SUMMARY:عيد المولد النبوي (تاريخ تقديري)
+DESCRIPTION:تاريخ تقديري (تقويم أم القرى). قد يت
+ أخر بيوم حسب رؤية الهلال بالمغرب.\\nالمصدر
+ : https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holid
+ ays\\nhttps://3otla.example/ar/2026/mawlid
+URL:https://3otla.example/ar/2026/mawlid
+STATUS:TENTATIVE
+SEQUENCE:0
+TRANSP:TRANSPARENT
+CLASS:PUBLIC
+END:VEVENT
+END:VCALENDAR
+"
+`;

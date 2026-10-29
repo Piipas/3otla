@@ -1,0 +1,183 @@
+{
+  "$schema": "../schema/holidays.schema.json",
+  "calendar": "national",
+  "holidays": [
+    {
+      "id": "new-year",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 1,
+      "day": 1,
+      "durationDays": 1,
+      "labels": {
+        "ar": "رأس السنة الميلادية",
+        "fr": "Nouvel An",
+        "en": "New Year’s Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "independence-manifesto",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 1,
+      "day": 11,
+      "durationDays": 1,
+      "labels": {
+        "ar": "ذكرى تقديم وثيقة المطالبة بالاستقلال",
+        "fr": "Manifeste de l’Indépendance",
+        "en": "Independence Manifesto Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "amazigh-new-year",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 1,
+      "day": 14,
+      "durationDays": 1,
+      "labels": {
+        "ar": "رأس السنة الأمازيغية",
+        "fr": "Nouvel An amazigh",
+        "en": "Amazigh New Year"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "labour-day",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 5,
+      "day": 1,
+      "durationDays": 1,
+      "labels": {
+        "ar": "عيد الشغل",
+        "fr": "Fête du Travail",
+        "en": "Labour Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "throne-day",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 7,
+      "day": 30,
+      "durationDays": 1,
+      "labels": {
+        "ar": "عيد العرش",
+        "fr": "Fête du Trône",
+        "en": "Throne Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "oued-ed-dahab",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 8,
+      "day": 14,
+      "durationDays": 1,
+      "labels": {
+        "ar": "ذكرى استرجاع إقليم وادي الذهب",
+        "fr": "Allégeance d’Oued Ed-Dahab",
+        "en": "Oued Ed-Dahab Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "revolution-of-the-king-and-the-people",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 8,
+      "day": 20,
+      "durationDays": 1,
+      "labels": {
+        "ar": "ذكرى ثورة الملك والشعب",
+        "fr": "Révolution du Roi et du Peuple",
+        "en": "Revolution of the King and the People"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "youth-day",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 8,
+      "day": 21,
+      "durationDays": 1,
+      "labels": {
+        "ar": "عيد الشباب",
+        "fr": "Fête de la Jeunesse",
+        "en": "Youth Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "unity-day",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 10,
+      "day": 31,
+      "durationDays": 1,
+      "labels": {
+        "ar": "عيد الوحدة",
+        "fr": "Fête de l’Unité",
+        "en": "Unity Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "decisionRefs": [
+        {
+          "ref": "2.25.1140",
+          "kind": "decree",
+          "scope": "public-sector"
+        },
+        {
+          "ref": "2.26.14",
+          "kind": "decree",
+          "scope": "private-sector"
+        }
+      ],
+      "validFrom": "2026-01-01"
+    },
+    {
+      "id": "green-march",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 11,
+      "day": 6,
+      "durationDays": 1,
+      "labels": {
+        "ar": "ذكرى المسيرة الخضراء",
+        "fr": "Marche Verte",
+        "en": "Green March"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "independence-day",
+      "calendar": "national",
+      "type": "fixed",
+      "month": 11,
+      "day": 18,
+      "durationDays": 1,
+      "labels": {
+        "ar": "عيد الاستقلال",
+        "fr": "Fête de l’Indépendance",
+        "en": "Independence Day"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    }
+  ]
+}

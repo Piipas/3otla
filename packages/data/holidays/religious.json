@@ -1,0 +1,66 @@
+{
+  "$schema": "../schema/holidays.schema.json",
+  "calendar": "religious",
+  "holidays": [
+    {
+      "id": "islamic-new-year",
+      "calendar": "religious",
+      "type": "hijri",
+      "month": 1,
+      "day": 1,
+      "durationDays": 1,
+      "labels": {
+        "ar": "فاتح محرم",
+        "fr": "Nouvel An de l’Hégire",
+        "en": "Islamic New Year"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "mawlid",
+      "calendar": "religious",
+      "type": "hijri",
+      "month": 3,
+      "day": 12,
+      "durationDays": 2,
+      "labels": {
+        "ar": "عيد المولد النبوي",
+        "fr": "Aïd al-Mawlid",
+        "en": "Mawlid (Prophet’s Birthday)"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "eid-al-fitr",
+      "calendar": "religious",
+      "type": "hijri",
+      "month": 10,
+      "day": 1,
+      "durationDays": 2,
+      "labels": {
+        "ar": "عيد الفطر",
+        "fr": "Aïd al-Fitr",
+        "en": "Eid al-Fitr"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    },
+    {
+      "id": "eid-al-adha",
+      "calendar": "religious",
+      "type": "hijri",
+      "month": 12,
+      "day": 10,
+      "durationDays": 2,
+      "labels": {
+        "ar": "عيد الأضحى",
+        "fr": "Aïd al-Adha",
+        "en": "Eid al-Adha"
+      },
+      "sourceUrl": "https://www.maroc.ma/index%2Ephp/en/morocco/religious-and-national-holidays",
+      "validFrom": "2024-01-01"
+    }
+  ]
+}

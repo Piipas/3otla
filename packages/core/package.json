@@ -1,0 +1,23 @@
+{
+  "name": "@3otla/core",
+  "version": "0.1.0",
+  "description": "Moroccan public holidays: national and Hijri (Umm al-Qura estimates + official confirmations), workdays, .ics.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@3otla/data": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "~26.6.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}

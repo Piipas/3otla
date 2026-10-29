@@ -1,0 +1,4 @@
+{
+  "$schema": "./schema/confirmations.schema.json",
+  "confirmations": []
+}
