@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Countdown } from "@/components/countdown";
 import { HolidayList } from "@/components/holiday-list";
+import { HolidayScene, sceneFor } from "@/components/holiday-scene";
 import { FadeIn } from "@/components/motion";
 import { StatusBadge } from "@/components/status-badge";
 import { SubscribeMenu } from "@/components/subscribe-menu";
@@ -36,12 +37,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: A
       <FadeIn delay={0.05}>
         <section
           aria-labelledby="next-holiday"
+          data-scene={sceneFor(next.id)}
           className="relative isolate overflow-hidden rounded-xl bg-linear-to-br from-hero-from to-hero-to px-6 py-10 text-white shadow-[0_30px_80px_-40px_var(--hero-from)] sm:px-12 sm:py-14"
         >
           <div
             aria-hidden="true"
             className="zellige pointer-events-none absolute inset-0 -z-10 mask-l-from-10% mask-l-to-90% rtl:mask-r-from-10% rtl:mask-r-to-90% rtl:mask-l-from-100%"
           />
+          <HolidayScene scene={sceneFor(next.id)} />
           <p className="text-sm font-medium tracking-wide text-white/75 uppercase">
             {ongoing ? t("home.today") : t("home.kicker")}
           </p>

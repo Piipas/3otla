@@ -132,6 +132,43 @@
   background-size: 56px 56px;
 }
 
+/*
+ * Home hero colours per holiday scene (src/components/holiday-scene.tsx). Same in light and
+ * dark mode: every pair keeps white text above 4.5:1.
+ */
+[data-scene="crescent"] {
+  --hero-from: #27318f;
+  --hero-to: #0b1033;
+}
+[data-scene="desert"] {
+  --hero-from: #a8432a;
+  --hero-to: #4a1a10;
+}
+[data-scene="amazigh"] {
+  --hero-from: #134a6b;
+  --hero-to: #071f30;
+}
+[data-scene="national"] {
+  --hero-from: #a3172b;
+  --hero-to: #4f0a15;
+}
+
+/* Hanging lanterns: a slow sway around the top of the chain. */
+@keyframes sway {
+  0%,
+  100% {
+    rotate: -2.5deg;
+  }
+  50% {
+    rotate: 2.5deg;
+  }
+}
+@utility animate-sway {
+  animation: sway 7s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
